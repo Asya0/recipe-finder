@@ -1,0 +1,27 @@
+.button {
+  padding: var(--space-s) var(--space-l);
+  background-color: var(--accent-color);
+  gap: var(--space-xxs);
+  min-height: 52px;
+  border: none;
+  color: var(--button-primary-text);
+
+  &:hover:not(.button--disabled):not(.button--loading) {
+    background-color: var(--button-primary-bg-hover);
+  }
+
+  &:active {
+    background-color: var(--button-primary-bg-active);
+  }
+
+  &--disabled {
+    background-color: var(--button-primary-bg-disabled);
+  }
+
+  &--loading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+}

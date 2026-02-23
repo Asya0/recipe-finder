@@ -1,0 +1,18 @@
+.multi-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+  
+    &-options {
+      background-color: var(--button-primary-text);
+      box-shadow: 0px 4px 10px 0px #00000040;
+    }
+    
+    &-option {
+      display: flex;
+      align-items: center;
+      padding: var(--space-s) var(--space-xs);
+      cursor: pointer;
+    }
+}
+

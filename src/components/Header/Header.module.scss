@@ -1,0 +1,95 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.header {
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+}
+// .banner {
+// width: 100%;
+
+// img {
+//   width: 100%;
+//   height: auto;
+//   object-fit: cover;
+//   display: block; 
+// }
+// }
+
+.logoIcon {
+  font-size: 1.8rem;
+}
+.logoText {
+    size: 20px;
+    color: var(--primary-color);
+}
+
+.nav {
+//   display: none; /* на мобильных скрываем */
+    display: flex;
+  gap: 16px;
+  
+//   @include tablet {
+//     display: flex; /* на планшетах показываем */
+//   }
+}
+
+.navLink {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: 1rem;
+    transition: color 0.2s;
+    
+    &--active {
+        color: var(--accent-color);
+       &:hover {
+            color: var(--button-primary-bg-hover);
+        }
+    }
+
+  &:hover {
+    color: var(--button-primary-bg-hover);
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.iconButton {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: var(--primary-color);
+  }
+}
