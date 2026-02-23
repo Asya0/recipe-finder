@@ -26,6 +26,13 @@
     overflow: hidden;
     flex-shrink: 0;
   }
+  &-icon {
+    margin-top: 7px;
+  }
+  &-info {
+    display: flex;
+    align-items: center;
+  }
 
   &-image {
     position: absolute;
@@ -79,6 +86,10 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
+     white-space: nowrap;     
+  overflow: hidden;         
+  text-overflow: ellipsis;
+  max-width: 100%;
   }
 
   &-subtitle {

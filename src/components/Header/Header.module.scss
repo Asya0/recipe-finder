@@ -7,6 +7,8 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  // max-width: 1400px;
+  margin: 0 auto;
 }
 
 .container {
@@ -30,16 +32,23 @@
     font-size: 1.2rem;
   }
 }
-// .banner {
-// width: 100%;
+.banner {
+width: 100%;
+display: flex;
 
-// img {
-//   width: 100%;
-//   height: auto;
-//   object-fit: cover;
-//   display: block; 
-// }
-// }
+
+
+img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block; 
+}
+
+ @media (max-width: 768px) {
+    display: none; 
+  }
+}
 
 .logoIcon {
   font-size: 1.8rem;
@@ -50,13 +59,13 @@
 }
 
 .nav {
-//   display: none; /* на мобильных скрываем */
+  // display: none; 
     display: flex;
   gap: 16px;
   
-//   @include tablet {
-//     display: flex; /* на планшетах показываем */
-//   }
+  @media (max-width: 768px) {
+    display: flex; 
+  }
 }
 
 .navLink {

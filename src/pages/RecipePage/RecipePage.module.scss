@@ -1,0 +1,345 @@
+.recipePage {
+//   max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  font-family: Roboto, sans-serif;
+  width: 100%;
+  
+
+  @media (max-width: 1240px) {
+    padding: 20px 16px;
+  }
+}
+
+// Хлебные крошки
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.backArrow {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.recipeTitle {
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 48px;
+  margin: 0;
+  color: var(--primary-color)
+}
+
+.recipeMain {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  margin-bottom: 48px;
+}
+
+.recipeImage {
+//   width: 100%;
+//   height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.recipeInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 50px 100px;
+  padding: 80px 150px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.infoLabel {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--primary-color);
+  margin-bottom: 4px;
+}
+
+.infoValue {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--accent-color);
+}
+
+// описание
+.recipeDescription {
+  background-color: #E2B395;
+  color: var(--primary-color);
+  border-radius: 9px;
+  padding: 36px;
+  margin-bottom: 48px;
+  
+  p {
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    margin: 0;
+    color: var(--primary-color);
+  }
+  a {
+    font-family: Roboto;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    margin: 0;
+    text-decoration: underline;
+    color: var(--primary-color);
+  }
+}
+
+// ингредиенты и оборудование
+.ingredientsEquipment {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 30px;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.divider {
+  background-color: var(--accent-color);
+  width: 1px;
+  height: 100%;
+  margin-top: 10px;
+}
+.divider-dot {
+    background-color: var(--accent-color);
+  width: 7px;
+  height: 7px;
+  border-radius: 100%;
+  margin-bottom: 5px; 
+  margin-left: -3px;  
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.sectionIcon {
+  width: 24px;
+  height: 24px;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.sectionTitle {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 28px;
+  color: #333;
+  margin: 0;
+}
+
+
+.ingredientsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.ingredientItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ingredientIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-color);
+  flex-shrink: 0;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.ingredientName {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #333;
+}
+
+.equipmentGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.equipmentItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.equipmentIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-color);
+  flex-shrink: 0;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.equipmentName {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #333;
+}
+
+.directionsSection {
+  margin-top: 48px;
+}
+
+.directionsTitle {
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 32px;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.directionsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.stepItem {
+  margin-bottom: 16px;
+  padding-left: 0;
+  
+  &::marker {
+    display: none;
+  }
+}
+
+.stepNumber {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+}
+
+.stepDescription {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--primary-color);
+  margin: 0 0 12px 0;
+}
+
+.stepImage {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.recipeLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  
+  p {
+    margin-top: 16px;
+    color: #666;
+  }
+}
+
+.recipeError {
+  text-align: center;
+  padding: 40px;
+  
+  h2 {
+    color: var(--accent-color);
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: #666;
+    margin-bottom: 24px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    
+    &:hover {
+      background-color: var(--button-primary-bg-hover);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .recipeMain {
+    grid-template-columns: 1fr;
+  }
+  
+  .recipeInfoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .ingredientsEquipment {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .divider {
+    display: none;
+  }
+  .divider-dot {
+    display: none;
+  }
+  
+  .ingredientsGrid,
+  .equipmentGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .recipeTitle {
+    font-size: 32px;
+    line-height: 36px;
+  }
+}

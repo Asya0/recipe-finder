@@ -1,11 +1,13 @@
 #root {
-  max-width: 1280px;
+  // max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: #F7E8D7;
 }
 
 .app {
+  width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -13,18 +15,10 @@
 
 .main {
   flex: 1;
-  padding: 30px 100px;
-  background-color: #F7E8D7;
-}
-.banner {
-width: 100%;
-
-img {
+    flex: 1;
   width: 100%;
-  height: auto;
-  object-fit: cover;
-  display: block; 
-}
+  // max-width: 1200px;
+  margin: 0 auto;
 }
 
 .logo {
@@ -32,12 +26,6 @@ img {
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
-  &:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  &.react:hover {
-    filter: drop-shadow(0 0 2em #61dafbaa);
-  }
 }
 
 @keyframes logo-spin {

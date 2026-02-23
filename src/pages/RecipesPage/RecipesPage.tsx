@@ -1,5 +1,6 @@
 // страница со списком
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import apiClient from '@/api/apiClient';
 import { Recipe, RecipesResponse } from '@/api/recipes';
 import Card from '@/components/Card';
@@ -10,12 +11,13 @@ import banner from '@/assets/header-bg.png';
 import Input from '@/components/Input';
 import MultiDropdown, { Option } from '@/components/MultiDropdown';
 import Pagination from '@/components/Pagination/Pagination';
+import Icon from '@/components/icons/Icon';
 
 const PAGE_SIZE = 9;
 
 const RecipesPage = () => {
   const [error, setError] = useState(null);
-  const [recipes, setRecipes] = useState<Recipe[]>([]); // в этом массиве будут объекты типа Recipe, у которых есть поле id и name
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
   const [searchValue, setSearchValue] = useState('');
@@ -28,7 +30,6 @@ const RecipesPage = () => {
     setLoading(true);
     setError(null);
     try {
-      // const response = await apiClient.get<RecipesResponse>('/api/recipes');
       let url = `/api/recipes?populate[0]=images&pagination[pageSize]=${PAGE_SIZE}&pagination[page]=${page}`;
 
       const response = await apiClient.get<RecipesResponse>(url);
@@ -40,10 +41,9 @@ const RecipesPage = () => {
         const total = response.data.meta.pagination.total;
         setTotalRecipes(total);
 
-        const calcukatedTotalPages = Math.ceil(total / PAGE_SIZE);
-        setTotalPages(calcukatedTotalPages);
+        const calculatedTotalPages = Math.ceil(total / PAGE_SIZE);
+        setTotalPages(calculatedTotalPages);
       }
-      console.log(totalPages, totalRecipes);
     } catch (err: any) {
       setError(err.message || 'ошибка загрузки');
       console.log('Ошибка', err);
@@ -51,6 +51,8 @@ const RecipesPage = () => {
       setLoading(false);
     }
   };
+
+  console.debug(totalRecipes);
 
   useEffect(() => {
     fetchRecipes(currentPage);
@@ -69,25 +71,44 @@ const RecipesPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSearch = () => {
+    // TODO: реализовать поиск
+    console.log('Search:', searchValue);
+  };
+
   return (
-    <>
+    <div className={styles.recipesPage}>
       <div className={styles.banner}>
         <img src={banner} alt="recipes" />
+      </div>
+
+      <div className={styles.infoContainer}>
         <span className={styles.info}>
-          Find the perfect food and drink ideas for every occasion, from weeknight dinners to
-          holiday feasts.
+          Find the perfect food and <span className={styles.underlined}>drink ideas</span> for every
+          occasion, from <span className={styles.underlined}>weeknight dinners</span> to
+          <span className={styles.underlined}> holiday feasts</span>.
         </span>
       </div>
 
       <div className={styles.contentContainer}>
-        {/* Поиск и фильтры */}
-        <div className={styles.filters}>
+        <div className={styles.searchRow}>
           <Input
             placeholder="Enter dishes"
             value={searchValue}
             onChange={(value) => setSearchValue(value)}
             className={styles.SearchBar}
           />
+          <Button className={styles.searchButton} onClick={handleSearch}>
+            <Icon width={20} height={20} color="accent">
+              <path
+                d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-0.59 4.23-1.57L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z"
+                fill="currentColor"
+              />
+            </Icon>
+          </Button>
+        </div>
+
+        <div className={styles.categoryRow}>
           <MultiDropdown
             options={categoryOptions}
             value={selectedCategories}
@@ -114,15 +135,17 @@ const RecipesPage = () => {
           recipes.length > 0 && (
             <div className={styles.recipeGrid}>
               {recipes.map((recipe) => (
-                <Card
-                  key={recipe.id}
-                  image={recipe.images?.[0]?.url}
-                  title={recipe.name}
-                  subtitle={recipe.summary} // потом вместо summary нужно выводить список ингридиентов
-                  cookingTime={recipe.cookingTime}
-                  actionSlot={<Button>Save</Button>}
-                  contentSlot={recipe.calories}
-                />
+                <Link to={`/recipe/${recipe.documentId}`} key={recipe.id}>
+                  <Card
+                    image={recipe.images?.[0]?.url}
+                    title={recipe.name}
+                    subtitle={recipe.summary}
+                    cookingTime={recipe.cookingTime}
+                    actionSlot={<Button>Save</Button>}
+                    contentSlot={recipe.calories}
+                    className={styles.card}
+                  />
+                </Link>
               ))}
             </div>
           )
@@ -134,7 +157,8 @@ const RecipesPage = () => {
           className={styles.pagination}
         />
       </div>
-    </>
+    </div>
   );
 };
+
 export default RecipesPage;

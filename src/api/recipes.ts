@@ -54,6 +54,33 @@ export interface Recipe {
   likes: number;
   vegetarian: boolean;
   images?: Image[];
+   ingradients?: Ingredient[];
+  equipments?: Equipment[];
+  directions?: Direction[];
+  category?: Category;
+}
+
+export interface Ingredient {
+  id: number;
+  name: string;
+  amount: number;
+  unit: string;
+}
+
+export interface Equipment {
+  id: number;
+  name: string;
+}
+
+export interface Direction {
+  id: number;
+  description: string;
+  image?: Image;
+}
+
+export interface Category {
+  id: number;
+  title: string;
 }
 
 export interface RecipesResponse {
