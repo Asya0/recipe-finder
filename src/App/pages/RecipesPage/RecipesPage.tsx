@@ -3,15 +3,19 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import apiClient from '@/api/apiClient';
 import { Recipe, RecipesResponse } from '@/api/recipes';
-import Card from '@/components/Card';
-import styles from '@/pages/RecipesPage/RecipesPage.module.scss';
-import Button from '@/components/Button';
-import Loader from '@/components/Loader';
+import styles from './RecipesPage.module.scss';
 import banner from '@/assets/header-bg.png';
-import Input from '@/components/Input';
-import MultiDropdown, { Option } from '@/components/MultiDropdown';
-import Pagination from '@/components/Pagination/Pagination';
-import Icon from '@/components/icons/Icon';
+import {
+  Input,
+  Pagination,
+  MultiDropdown,
+  Button,
+  Icon,
+  Loading,
+  Card,
+  ErrorMessage,
+  type Option,
+} from '@/components';
 
 const PAGE_SIZE = 9;
 
@@ -46,13 +50,10 @@ const RecipesPage = () => {
       }
     } catch (err: any) {
       setError(err.message || 'ошибка загрузки');
-      console.log('Ошибка', err);
     } finally {
       setLoading(false);
     }
   };
-
-  console.debug(totalRecipes);
 
   useEffect(() => {
     fetchRecipes(currentPage);
@@ -73,7 +74,6 @@ const RecipesPage = () => {
 
   const handleSearch = () => {
     // TODO: реализовать поиск
-    console.log('Search:', searchValue);
   };
 
   return (
@@ -123,14 +123,11 @@ const RecipesPage = () => {
         </div>
 
         {loading ? (
-          <div className={styles.loaderContainer}>
-            <Loader size="l" color="accent" />
-          </div>
+          <Loading size="l" color="accent" />
         ) : error ? (
-          <div className={styles.error}>
-            <p>{error}</p>
+          <ErrorMessage error={error}>
             <Button onClick={() => fetchRecipes(currentPage)}>Повторить попытку</Button>
-          </div>
+          </ErrorMessage>
         ) : (
           recipes.length > 0 && (
             <div className={styles.recipeGrid}>

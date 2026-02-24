@@ -117,7 +117,6 @@ const Pagination: React.FC<PaginationProps> = ({
       >
         <ArrowRightIcon />
       </Button>
-      <Icon>dwd</Icon>
     </div>
   );
 };

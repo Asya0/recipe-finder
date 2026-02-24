@@ -1,3 +1,4 @@
+@use "@/styles/variables" as *;
 .recipePage {
 //   max-width: 1200px;
   margin: 0 auto;
@@ -36,7 +37,7 @@
   font-size: 44px;
   line-height: 48px;
   margin: 0;
-  color: var(--primary-color)
+  color: $primary-color
 }
 
 .recipeMain {
@@ -71,7 +72,7 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 20px;
-  color: var(--primary-color);
+  color: $primary-color;
   margin-bottom: 4px;
 }
 
@@ -79,13 +80,13 @@
   font-weight: 600;
   font-size: 16px;
   line-height: 20px;
-  color: var(--accent-color);
+  color: $accent-color;
 }
 
 // описание
 .recipeDescription {
   background-color: #E2B395;
-  color: var(--primary-color);
+  color: $primary-color;
   border-radius: 9px;
   padding: 36px;
   margin-bottom: 48px;
@@ -96,7 +97,7 @@
     font-size: 16px;
     line-height: 20px;
     margin: 0;
-    color: var(--primary-color);
+    color: $primary-color;
   }
   a {
     font-family: Roboto;
@@ -105,7 +106,7 @@
     line-height: 20px;
     margin: 0;
     text-decoration: underline;
-    color: var(--primary-color);
+    color: $primary-color;
   }
 }
 
@@ -119,13 +120,13 @@
 }
 
 .divider {
-  background-color: var(--accent-color);
+  background-color: $accent-color;
   width: 1px;
   height: 100%;
   margin-top: 10px;
 }
 .divider-dot {
-    background-color: var(--accent-color);
+    background-color: $accent-color;
   width: 7px;
   height: 7px;
   border-radius: 100%;
@@ -174,7 +175,7 @@
 .ingredientIcon {
   width: 20px;
   height: 20px;
-  color: var(--accent-color);
+  color: $accent-color;
   flex-shrink: 0;
   
   svg {
@@ -205,7 +206,7 @@
 .equipmentIcon {
   width: 20px;
   height: 20px;
-  color: var(--accent-color);
+  color: $accent-color;
   flex-shrink: 0;
   
   svg {
@@ -252,7 +253,7 @@
   font-weight: 600;
   font-size: 16px;
   line-height: 20px;
-  color: var(--primary-color);
+  color: $primary-color;
   margin-bottom: 8px;
 }
 
@@ -260,7 +261,7 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  color: var(--primary-color);
+  color: $primary-color;
   margin: 0 0 12px 0;
 }
 
@@ -288,7 +289,7 @@
   padding: 40px;
   
   h2 {
-    color: var(--accent-color);
+    color: $accent-color;
     margin-bottom: 16px;
   }
   
@@ -299,7 +300,7 @@
   
   button {
     padding: 10px 20px;
-    background-color: var(--accent-color);
+    background-color: $accent-color;
     color: white;
     border: none;
     border-radius: 6px;
@@ -307,7 +308,7 @@
     font-weight: 500;
     
     &:hover {
-      background-color: var(--button-primary-bg-hover);
+      background-color: $button-primary-bg-hover;
     }
   }
 }

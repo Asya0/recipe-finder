@@ -1,7 +1,8 @@
+@use "@/styles/variables" as *;
 .multi-dropdown {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xxs);
+  gap: $space-xxs;
   position: relative; 
 
   &-input {
@@ -24,7 +25,7 @@
 
 
     &:hover :global(.after-slot svg) {
-      color: var(--accent-color);
+      color: $accent-color;
     }
   }
 
@@ -40,9 +41,9 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    background-color: var(--button-primary-text);
+    background-color: $button-primary-text;
     box-shadow: 0px 4px 10px 0px #00000040;
-    color: var(--primary-color);
+    color: $primary-color;
     margin-top: 5px; 
     border-radius: 5px;
     max-height: 300px;
@@ -52,21 +53,21 @@
   &-option {
     display: flex;
     align-items: center;
-    padding: var(--space-s) var(--space-xs);
+    padding: $space-s $space-xs;
     cursor: pointer;
 
     &:hover {
-      background-color: var(--button-primary-bg-hover);
+      background-color: $button-primary-bg-hover;
     }
 
     &--selected {
-      background-color: var(--accent-color);
+      background-color: $accent-color;
       color: white;
     }
   }
 
   &--empty {
-    padding: var(--space-s) var(--space-xs);
+    padding: $space-s $space-xs;
     text-align: center;
     color: #999;
   }

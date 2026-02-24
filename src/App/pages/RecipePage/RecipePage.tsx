@@ -177,7 +177,7 @@ const RecipePage = () => {
           </div>
         </div>
 
-        <div className="">
+        <div>
           <div className={styles['divider-dot']}></div>
           <div className={styles.divider}></div>
         </div>

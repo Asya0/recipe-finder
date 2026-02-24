@@ -1,3 +1,4 @@
+@use "@/styles/variables" as *;
 .input-wrapper {
   position: relative;
   display: flex;
@@ -11,7 +12,7 @@
   }
 
   &:focus-within {
-    border-color: var(--accent-color);
+    border-color: $accent-color;
   }
 
   &--with-slot {

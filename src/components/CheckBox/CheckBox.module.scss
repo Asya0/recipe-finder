@@ -1,9 +1,10 @@
+@use "@/styles/variables" as *;
 .checkbox {
   display: inline-block;
   align-items: center;
   width: 40px;
   height: 40px;
-  background-color: var(--button-primary-text);
+  background-color: $button-primary-text;
   cursor: pointer;
   user-select: none;
   border: 1px solid transparent;
@@ -28,7 +29,7 @@
   }
 
   &:hover:not(.checkbox--disabled) {
-    border-color: var(--accent-color);
+    border-color: $accent-color;
   }
 
   &--disabled {

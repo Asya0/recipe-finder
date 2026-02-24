@@ -1,5 +1,4 @@
-@import '@/styles/variables';
-@import '@/styles/mixins';
+@use "@/styles/variables" as *;
 
 .header {
   background-color: white;
@@ -27,7 +26,7 @@
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    color: var(--primary-color);
+    color: $primary-color;
     font-weight: bold;
     font-size: 1.2rem;
   }
@@ -55,7 +54,7 @@ img {
 }
 .logoText {
     size: 20px;
-    color: var(--primary-color);
+    color: $primary-color;
 }
 
 .nav {
@@ -70,19 +69,19 @@ img {
 
 .navLink {
     text-decoration: none;
-    color: var(--primary-color);
+    color: $primary-color;
     font-size: 1rem;
     transition: color 0.2s;
     
     &--active {
-        color: var(--accent-color);
+        color: $accent-color;
        &:hover {
-            color: var(--button-primary-bg-hover);
+            color: $button-primary-bg-hover;
         }
     }
 
   &:hover {
-    color: var(--button-primary-bg-hover);
+    color: $button-primary-bg-hover;
   }
 }
 
@@ -94,11 +93,11 @@ img {
 
 .iconButton {
   text-decoration: none;
-  color: var(--primary-color);
+  color: $primary-color;
   font-size: 1.4rem;
   transition: color 0.2s;
   
   &:hover {
-    color: var(--primary-color);
+    color: $primary-color;
   }
 }
