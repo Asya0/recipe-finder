@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './Pagination.module.scss';
 import Button from '../Button';
-import Icon from '../icons/Icon';
+import ArrowRightIcon from '../icons/ArrowRightIcon/ArrowRightIcon';
+import ArrowLeftIcon from '../icons/ArrowLeftIcon/ArrowLeftIcon';
 
 interface PaginationProps {
   currentPage: number;
@@ -10,32 +11,6 @@ interface PaginationProps {
   className?: string;
 }
 type PageItem = number | '...';
-
-const ArrowLeftIcon: React.FC = () => (
-  <Icon width={20} height={20} viewBox="0 0 24 24">
-    <path
-      d="M15 18L9 12L15 6"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      fill="none"
-    />
-  </Icon>
-);
-
-const ArrowRightIcon: React.FC = () => (
-  <Icon width={20} height={20} viewBox="0 0 24 24">
-    <path
-      d="M9 18L15 12L9 6"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      fill="none"
-    />
-  </Icon>
-);
 
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
@@ -89,13 +64,13 @@ const Pagination: React.FC<PaginationProps> = ({
         className={styles.paginationButton}
         aria-label="Предыдущая страница"
       >
-        <ArrowLeftIcon />
+        <ArrowLeftIcon width={20} height={20} viewBox="0 0 24 24" />
       </Button>
 
       <div className={styles.pageNumbers}>
         {getPageNumbers().map((page, index) => (
           <div
-            key={index}
+            key={page === '...' ? `ellipsis-${index}` : page}
             onClick={() => (typeof page === 'number' ? onPageChange(page) : undefined)}
             // disabled={page === '...'}
             className={`${styles.pageButton} ${
@@ -115,7 +90,7 @@ const Pagination: React.FC<PaginationProps> = ({
         className={styles.paginationButton}
         aria-label="Следующая страница"
       >
-        <ArrowRightIcon />
+        <ArrowRightIcon width={20} height={20} viewBox="0 0 24 24" />
       </Button>
     </div>
   );

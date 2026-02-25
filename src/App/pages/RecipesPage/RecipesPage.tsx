@@ -6,16 +6,16 @@ import { Recipe, RecipesResponse } from '@/api/recipes';
 import styles from './RecipesPage.module.scss';
 import banner from '@/assets/header-bg.png';
 import {
-  Input,
   Pagination,
   MultiDropdown,
   Button,
-  Icon,
   Loading,
   Card,
   ErrorMessage,
   type Option,
 } from '@/components';
+import { categoryOptions } from './config';
+import SearchBar from '@/components/SearchBar/SearchBar';
 
 const PAGE_SIZE = 9;
 
@@ -59,14 +59,6 @@ const RecipesPage = () => {
     fetchRecipes(currentPage);
   }, [currentPage]);
 
-  const categoryOptions: Option[] = [
-    { key: 'breakfast', value: 'Завтраки' },
-    { key: 'soups', value: 'Супы' },
-    { key: 'desserts', value: 'Десерты' },
-    { key: 'salads', value: 'Салаты' },
-    { key: 'main', value: 'Основные блюда' },
-  ];
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -77,38 +69,30 @@ const RecipesPage = () => {
   };
 
   return (
-    <div className={styles.recipesPage}>
-      <div className={styles.banner}>
-        <img src={banner} alt="recipes" />
+    <div className={styles['recipes-page']}>
+      <div className={styles['recipes-page__banner']}>
+        <img src={banner} alt="recipes" className={styles['recipes-page__bannerImage']} />
       </div>
 
-      <div className={styles.infoContainer}>
-        <span className={styles.info}>
-          Find the perfect food and <span className={styles.underlined}>drink ideas</span> for every
-          occasion, from <span className={styles.underlined}>weeknight dinners</span> to
-          <span className={styles.underlined}> holiday feasts</span>.
+      <div className={styles['recipes-page__infoContainer']}>
+        <span className={styles['recipes-page__info']}>
+          Find the perfect food and{' '}
+          <span className={styles['recipes-page__infoUnderlined']}>drink ideas</span> for every
+          occasion, from{' '}
+          <span className={styles['recipes-page__infoUnderlined']}>weeknight dinners</span> to
+          <span className={styles['recipes-page__infoUnderlined']}> holiday feasts</span>.
         </span>
       </div>
 
-      <div className={styles.contentContainer}>
-        <div className={styles.searchRow}>
-          <Input
-            placeholder="Enter dishes"
-            value={searchValue}
-            onChange={(value) => setSearchValue(value)}
-            className={styles.SearchBar}
-          />
-          <Button className={styles.searchButton} onClick={handleSearch}>
-            <Icon width={20} height={20} color="accent">
-              <path
-                d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-0.59 4.23-1.57L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z"
-                fill="currentColor"
-              />
-            </Icon>
-          </Button>
-        </div>
+      <div className={styles['recipes-page__content']}>
+        <SearchBar
+          placeholder="Enter dishes"
+          value={searchValue}
+          onChange={(value) => setSearchValue(value)}
+          onSearch={handleSearch}
+        />
 
-        <div className={styles.categoryRow}>
+        <div className={styles['recipes-page__categoryRow']}>
           <MultiDropdown
             options={categoryOptions}
             value={selectedCategories}
@@ -118,7 +102,7 @@ const RecipesPage = () => {
               if (values.length === 1) return values[0].value;
               return `Выбрано: ${values.length}`;
             }}
-            className={styles.sort}
+            className={styles['recipes-page__categoryDropdown']}
           />
         </div>
 
@@ -130,9 +114,13 @@ const RecipesPage = () => {
           </ErrorMessage>
         ) : (
           recipes.length > 0 && (
-            <div className={styles.recipeGrid}>
+            <div className={styles['recipes-page__grid']}>
               {recipes.map((recipe) => (
-                <Link to={`/recipe/${recipe.documentId}`} key={recipe.id}>
+                <Link
+                  to={`/recipe/${recipe.documentId}`}
+                  key={recipe.id}
+                  className={styles['recipes-page__gridItem']}
+                >
                   <Card
                     image={recipe.images?.[0]?.url}
                     title={recipe.name}
@@ -140,7 +128,6 @@ const RecipesPage = () => {
                     cookingTime={recipe.cookingTime}
                     actionSlot={<Button>Save</Button>}
                     contentSlot={recipe.calories}
-                    className={styles.card}
                   />
                 </Link>
               ))}
@@ -151,7 +138,7 @@ const RecipesPage = () => {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
-          className={styles.pagination}
+          className={styles['recipes-page__pagination']}
         />
       </div>
     </div>
