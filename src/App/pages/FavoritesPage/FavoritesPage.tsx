@@ -1,6 +1,7 @@
 // страница сохраненных рецептов
 import { Link } from 'react-router-dom';
 import styles from './FavoritesPage.module.scss';
+import { Button } from '@/components';
 
 const FavoritesPage = () => {
   return (
@@ -9,7 +10,7 @@ const FavoritesPage = () => {
         <div className={styles.emptyState}>
           <h2 className={styles.emptyTitle}>У вас пока нет сохраненных рецептов</h2>
           <Link to="/recipes">
-            <button className={styles.exploreButton}>Найти рецепты</button>
+            <Button className={styles.exploreButton}>Найти рецепты</Button>
           </Link>
         </div>
       </div>

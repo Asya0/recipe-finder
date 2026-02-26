@@ -1,0 +1,44 @@
+@use "@/styles/variables" as *;
+
+.recipe-content {
+  width: 100%;
+}
+
+.recipe__ingredients-equipment {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 30px;
+  margin-bottom: 40px;
+  position: relative;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+
+.divider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  
+  .divider-dot {
+    background-color: $accent-color;
+    width: 7px;
+    height: 7px;
+    border-radius: 100%;
+    margin-bottom: 5px;
+    margin-left: 0;  
+  }
+  
+  .divider {
+    background-color: $accent-color;
+    width: 1px;
+    height: 100%;
+  }

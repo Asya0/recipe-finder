@@ -1,8 +1,6 @@
 // страница со списком
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import apiClient from '@/api/apiClient';
-import { Recipe, RecipesResponse } from '@/api/recipes';
 import styles from './RecipesPage.module.scss';
 import banner from '@/assets/header-bg.png';
 import {
@@ -16,53 +14,13 @@ import {
 } from '@/components';
 import { categoryOptions } from './config';
 import SearchBar from '@/components/SearchBar/SearchBar';
-
-const PAGE_SIZE = 9;
+import { useRecipes } from '@/hooks/useRecipes';
 
 const RecipesPage = () => {
-  const [error, setError] = useState(null);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [loading, setLoading] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
   const [searchValue, setSearchValue] = useState('');
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalRecipes, setTotalRecipes] = useState(0);
-
-  const fetchRecipes = async (page = 1) => {
-    setLoading(true);
-    setError(null);
-    try {
-      let url = `/api/recipes?populate[0]=images&pagination[pageSize]=${PAGE_SIZE}&pagination[page]=${page}`;
-
-      const response = await apiClient.get<RecipesResponse>(url);
-
-      if (response) {
-        setRecipes(response.data.data);
-      }
-      if (response.data.meta && response.data.meta.pagination) {
-        const total = response.data.meta.pagination.total;
-        setTotalRecipes(total);
-
-        const calculatedTotalPages = Math.ceil(total / PAGE_SIZE);
-        setTotalPages(calculatedTotalPages);
-      }
-    } catch (err: any) {
-      setError(err.message || 'ошибка загрузки');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchRecipes(currentPage);
-  }, [currentPage]);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const { error, recipes, loading, currentPage, totalPages, goToPage } = useRecipes();
 
   const handleSearch = () => {
     // TODO: реализовать поиск
@@ -110,7 +68,7 @@ const RecipesPage = () => {
           <Loading size="l" color="accent" />
         ) : error ? (
           <ErrorMessage error={error}>
-            <Button onClick={() => fetchRecipes(currentPage)}>Повторить попытку</Button>
+            <Button onClick={() => goToPage(currentPage)}>Повторить попытку</Button>
           </ErrorMessage>
         ) : (
           recipes.length > 0 && (
@@ -137,7 +95,7 @@ const RecipesPage = () => {
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={handlePageChange}
+          onPageChange={goToPage}
           className={styles['recipes-page__pagination']}
         />
       </div>
