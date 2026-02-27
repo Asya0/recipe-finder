@@ -1,4 +1,5 @@
 @use "@/styles/variables" as *;
+@use "@/styles/mixins" as *;
 
 .header {
   background-color: white;
@@ -18,22 +19,22 @@
   align-items: center;
   justify-content: space-between;
 
-  @media (max-width: 1200px) {
+  @include desktop-only {
     padding: 0 16px;
     height: 65px;
   }
 
-  @media (max-width: 992px) {
+  @include tablet-lg-only {
     padding: 0 16px;
     height: 60px;
   }
 
-  @media (max-width: 768px) {
+  @include tablet-only {
     padding: 0 12px;
     height: 56px;
   }
 
-  @media (max-width: 480px) {
+  @include phone-only {
     padding: 0 10px;
     height: 52px;
   }
@@ -49,17 +50,17 @@
     font-weight: bold;
     font-size: 1.2rem;
 
-    @media (max-width: 992px) {
+    @include tablet-lg-only {
       gap: 6px;
       font-size: 1.1rem;
     }
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       gap: 4px;
       font-size: 1rem;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       font-size: 0.9rem;
     }
   }
@@ -72,17 +73,17 @@
   max-height: 40px;
   max-width: 40px;
 
-  @media (max-width: 992px) {
+  @include tablet-lg-only {
     max-height: 36px;
     max-width: 36px;
   }
 
-  @media (max-width: 768px) {
+  @include tablet-only {
     max-height: 32px;
     max-width: 32px;
   }
 
-  @media (max-width: 480px) {
+  @include phone-only {
     max-height: 28px;
     max-width: 28px;
   }
@@ -92,15 +93,15 @@
   size: 20px;
   color: $primary-color;
 
-  @media (max-width: 992px) {
+  @include tablet-lg-only {
     font-size: 18px;
   }
 
-  @media (max-width: 768px) {
+  @include tablet-only {
     font-size: 16px;
   }
 
-  @media (max-width: 576px) {
+  @include phone-lg-only {
     display: none;
   }
 }
@@ -109,23 +110,23 @@
   display: flex;
   gap: 16px;
   
-  @media (max-width: 1200px) {
+  @include desktop-only {
     gap: 14px;
   }
 
-  @media (max-width: 992px) {
+  @include tablet-lg-only {
     gap: 12px;
   }
 
-  @media (max-width: 768px) {
+  @include tablet-only {
     gap: 10px;
   }
 
-  @media (max-width: 576px) {
+  @include phone-lg-only {
     gap: 8px;
   }
 
-  @media (max-width: 480px) {
+  @include phone-only {
     gap: 6px;
   }
 
@@ -157,23 +158,23 @@
     color: $button-primary-bg-hover;
   }
 
-  @media (max-width: 1200px) {
+  @include desktop-only {
     font-size: 0.95rem;
   }
 
-  @media (max-width: 992px) {
+  @include tablet-lg-only {
     font-size: 0.9rem;
   }
 
-  @media (max-width: 768px) {
+  @include tablet-only {
     font-size: 0.85rem;
   }
 
-  @media (max-width: 576px) {
+  @include phone-lg-only {
     font-size: 0.8rem;
   }
 
-  @media (max-width: 480px) {
+  @include phone-only {
     font-size: 0.75rem;
     padding: 2px 0;
   }
@@ -188,23 +189,23 @@
   align-items: center;
   gap: 16px;
 
-  @media (max-width: 1200px) {
+  @include desktop-only {
     gap: 14px;
   }
 
-  @media (max-width: 992px) {
+  @include tablet-lg-only {
     gap: 12px;
   }
 
-  @media (max-width: 768px) {
+  @include tablet-only {
     gap: 10px;
   }
 
-  @media (max-width: 576px) {
+  @include phone-lg-only {
     gap: 8px;
   }
 
-  @media (max-width: 480px) {
+  @include phone-only {
     gap: 6px;
   }
 
@@ -230,22 +231,22 @@
     width: 19px;
     height: 19px;
 
-    @media (max-width: 992px) {
+    @include tablet-lg-only {
       width: 18px;
       height: 18px;
     }
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       width: 17px;
       height: 17px;
     }
 
-    @media (max-width: 576px) {
+    @include phone-lg-only {
       width: 16px;
       height: 16px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       width: 15px;
       height: 15px;
     }
@@ -260,22 +261,22 @@
     width: 24px;
     height: 24px;
 
-    @media (max-width: 992px) {
+    @include tablet-lg-only {
       width: 22px;
       height: 22px;
     }
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       width: 20px;
       height: 20px;
     }
 
-    @media (max-width: 576px) {
+    @include phone-lg-only {
       width: 18px;
       height: 18px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       width: 16px;
       height: 16px;
     }

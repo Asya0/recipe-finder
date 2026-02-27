@@ -1,4 +1,5 @@
 @use "@/styles/variables" as *;
+@use "@/styles/mixins" as *;
 
 .card {
   gap: $space-xl;
@@ -21,32 +22,32 @@
     cursor: pointer;
   }
 
-  @media (min-width: 1920px) {
+  @include desktop-xl {
     border-radius: 12px;
     gap: $space-l;
     padding-bottom: $space-l;
   }
 
-  @media (max-width: 1440px) {
+  @include desktop-lg-only {
     gap: $space-l;
     padding-bottom: $space-l;
   }
 
-  @media (max-width: 1200px) {
+  @include desktop-only {
     gap: $space-s;
     padding-bottom: $space-s;
   }
 
-  @media (max-width: 992px) {
+  @include tablet-lg-only {
     border-radius: 8px;
   }
 
-  @media (max-width: 768px) {
+  @include tablet-only {
     gap: $space-s;
     padding-bottom: $space-s;
   }
 
-  @media (max-width: 480px) {
+  @include phone-only {
     border-radius: 6px;
     gap: $space-xs;
     padding-bottom: $space-xs;
@@ -59,15 +60,15 @@
     overflow: hidden;
     flex-shrink: 0;
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       padding-top: 85%; 
     }
 
-    @media (max-width: 576px) {
+    @include phone-lg-only {
       padding-top: 75%;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       padding-top: 70%;
     }
   }
@@ -75,11 +76,11 @@
   &-icon {
     margin-top: 7px;
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       margin-top: 5px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       margin-top: 3px;
     }
   }
@@ -89,7 +90,7 @@
     align-items: center;
     gap: 4px;
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       gap: 3px;
     }
   }
@@ -120,34 +121,34 @@
     gap: $space-l;
     box-sizing: border-box;
 
-    @media (min-width: 1920px) {
+    @include desktop-xl {
       padding-left: $space-s;
       padding-right: $space-s;
       gap: $space-xl;
     }
 
-    @media (max-width: 1440px) {
+    @include desktop-lg-only {
       gap: $space-s;
     }
 
-    @media (max-width: 1200px) {
+    @include desktop-only {
       padding-left: 12px;
       padding-right: 12px;
       gap: $space-s;
     }
 
-    @media (max-width: 992px) {
+    @include tablet-lg-only {
       padding-left: 10px;
       padding-right: 10px;
     }
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       padding-left: 8px;
       padding-right: 8px;
       gap: 10px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       padding-left: 6px;
       padding-right: 6px;
       gap: 8px;
@@ -159,15 +160,15 @@
     display: flex;
     flex-direction: column;
 
-    @media (max-width: 1200px) {
+    @include desktop-only {
       gap: 6px;
     }
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       gap: 5px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       gap: 4px;
     }
   }
@@ -180,24 +181,24 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 
-    @media (max-width: 1200px) {
+    @include desktop-only {
       font-size: 13px;
       line-height: 16px;
       margin-bottom: 3px;
     }
 
-    @media (max-width: 992px) {
+    @include tablet-lg-only {
       font-size: 12px;
       line-height: 15px;
     }
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       font-size: 11px;
       line-height: 14px;
       letter-spacing: 0.3px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       font-size: 10px;
       line-height: 12px;
       letter-spacing: 0.2px;
@@ -216,37 +217,37 @@
     font-size: 20px;
     line-height: 24px;
 
-    @media (min-width: 1920px) {
+    @include desktop-xl {
       font-size: 24px;
       line-height: 28px;
     }
 
-    @media (max-width: 1440px) {
+    @include desktop-lg-only {
       font-size: 18px;
       line-height: 22px;
     }
 
-    @media (max-width: 1200px) {
+    @include desktop-only {
       font-size: 17px;
       line-height: 21px;
     }
 
-    @media (max-width: 992px) {
+    @include tablet-lg-only {
       font-size: 16px;
       line-height: 20px;
     }
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       font-size: 15px;
       line-height: 19px;
     }
 
-    @media (max-width: 576px) {
+    @include phone-lg-only {
       font-size: 14px;
       line-height: 18px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       font-size: 13px;
       line-height: 16px;
       white-space: normal; 
@@ -266,40 +267,40 @@
     font-size: 16px;
     line-height: 20px;
 
-    @media (min-width: 1920px) {
+    @include desktop-xl {
       font-size: 18px;
       line-height: 22px;
       -webkit-line-clamp: 4;
     }
 
-    @media (max-width: 1440px) {
+    @include desktop-lg-only {
       font-size: 15px;
       line-height: 19px;
     }
 
-    @media (max-width: 1200px) {
+    @include desktop-only {
       font-size: 14px;
       line-height: 18px;
       -webkit-line-clamp: 3;
     }
 
-    @media (max-width: 992px) {
+    @include tablet-lg-only {
       font-size: 13px;
       line-height: 17px;
     }
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       font-size: 12px;
       line-height: 16px;
       -webkit-line-clamp: 2; 
     }
 
-    @media (max-width: 576px) {
+    @include phone-lg-only {
       font-size: 11px;
       line-height: 14px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       font-size: 10px;
       line-height: 13px;
       -webkit-line-clamp: 2;
@@ -313,12 +314,12 @@
     justify-content: space-between;
     margin-top: auto;
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       flex-wrap: wrap;
       gap: 8px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       gap: 6px;
     }
   }
@@ -329,37 +330,37 @@
     line-height: 24px;
     color: $accent-color;
 
-    @media (min-width: 1920px) {
+    @include desktop-xl {
       font-size: 24px;
       line-height: 28px;
     }
 
-    @media (max-width: 1440px) {
+    @include desktop-lg-only {
       font-size: 18px;
       line-height: 22px;
     }
 
-    @media (max-width: 1200px) {
+    @include desktop-only {
       font-size: 17px;
       line-height: 21px;
     }
 
-    @media (max-width: 992px) {
+    @include tablet-lg-only {
       font-size: 16px;
       line-height: 20px;
     }
 
-    @media (max-width: 768px) {
+    @include tablet-only {
       font-size: 15px;
       line-height: 19px;
     }
 
-    @media (max-width: 576px) {
+    @include phone-lg-only {
       font-size: 14px;
       line-height: 18px;
     }
 
-    @media (max-width: 480px) {
+    @include phone-only {
       font-size: 13px;
       line-height: 16px;
     }
@@ -375,27 +376,27 @@
       min-width: 40px;
       min-height: 40px;
 
-      @media (max-width: 1200px) {
+      @include desktop-only {
         min-width: 38px;
         min-height: 38px;
       }
 
-      @media (max-width: 992px) {
+      @include tablet-lg-only {
         min-width: 36px;
         min-height: 36px;
       }
 
-      @media (max-width: 768px) {
+      @include tablet-only {
         min-width: 34px;
         min-height: 34px;
       }
 
-      @media (max-width: 576px) {
+      @include phone-lg-only {
         min-width: 32px;
         min-height: 32px;
       }
 
-      @media (max-width: 480px) {
+      @include phone-only {
         min-width: 30px;
         min-height: 30px;
       }
@@ -411,27 +412,27 @@
 :global {
   .card {
     [class*="p-16"] {
-      @media (max-width: 1200px) {
+      @include desktop-only {
         font-size: 15px !important;
         line-height: 19px !important;
       }
 
-      @media (max-width: 992px) {
+      @include tablet-lg-only {
         font-size: 14px !important;
         line-height: 18px !important;
       }
 
-      @media (max-width: 768px) {
+      @include tablet-only {
         font-size: 13px !important;
         line-height: 17px !important;
       }
 
-      @media (max-width: 576px) {
+      @include phone-lg-only {
         font-size: 12px !important;
         line-height: 16px !important;
       }
 
-      @media (max-width: 480px) {
+      @include phone-only {
         font-size: 11px !important;
         line-height: 14px !important;
       }
