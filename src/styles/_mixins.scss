@@ -1,0 +1,77 @@
+@use "sass:map";
+@use "@/styles/variables" as *;
+
+$breakpoints: (
+  'phone': 480px,
+  'phone-lg': 576px,
+  'tablet': 768px,
+  'tablet-lg': 992px,
+  'desktop': 1200px,
+  'desktop-lg': 1400px,
+  'desktop-xl': 1920px,
+  'desktop-xxl': 2560px
+);
+
+@mixin phone {
+  @media (min-width: map.get($breakpoints, phone)) { @content; }
+}
+
+@mixin phone-lg {
+  @media (min-width: map.get($breakpoints, phone-lg)) { @content; }
+}
+
+@mixin tablet {
+  @media (min-width: map.get($breakpoints, tablet)) { @content; }
+}
+
+@mixin tablet-lg {
+  @media (min-width: map.get($breakpoints, tablet-lg)) { @content; }
+}
+
+@mixin desktop {
+  @media (min-width: map.get($breakpoints, desktop)) { @content; }
+}
+
+@mixin desktop-lg {
+  @media (min-width: map.get($breakpoints, desktop-lg)) { @content; }
+}
+
+@mixin desktop-xl {
+  @media (min-width: map.get($breakpoints, desktop-xl)) { @content; }
+}
+
+@mixin desktop-xxl {
+  @media (min-width: map.get($breakpoints, desktop-xxl)) { @content; }
+}
+
+@mixin phone-only {
+  @media (max-width: map.get($breakpoints, phone)) { @content; }
+}
+
+@mixin phone-lg-only {
+  @media (max-width: map.get($breakpoints, phone-lg)) { @content; }
+}
+
+@mixin tablet-only {
+  @media (max-width: map.get($breakpoints, tablet)) { @content; }
+}
+
+@mixin tablet-lg-only {
+  @media (max-width: map.get($breakpoints, tablet-lg)) { @content; }
+}
+
+@mixin desktop-only {
+  @media (max-width: map.get($breakpoints, desktop)) { @content; }
+}
+
+@mixin desktop-lg-only {
+  @media (max-width: map.get($breakpoints, desktop-lg)) { @content; }
+}
+
+@mixin desktop-xl-only {
+  @media (max-width: map.get($breakpoints, desktop-xl)) { @content; }
+}
+
+@mixin between($min, $max) {
+  @media (min-width: $min) and (max-width: $max) { @content; }
+}

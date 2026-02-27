@@ -1,0 +1,41 @@
+@use "@/styles/variables" as *;
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+   border-radius: 9px;
+
+  &--disabled {
+    cursor: not-allowed;
+  }
+
+  &:focus-within {
+    border-color: $accent-color;
+  }
+
+  &--with-slot {
+    .input {
+      padding-right: 44px;
+    }
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #ffffff;
+  border: none;
+  outline: none;
+  border-radius: 9px;
+}
+
+.input-after-slot {
+  position: absolute;
+  right: 12px;
+  top: 14px;
+}

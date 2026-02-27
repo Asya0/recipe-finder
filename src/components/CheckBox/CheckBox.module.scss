@@ -1,0 +1,39 @@
+@use "@/styles/variables" as *;
+.checkbox {
+  display: inline-block;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: $button-primary-text;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+
+  &-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &-custom {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    top: -1px;
+    left: -1px;
+    width: 40px;
+    height: 40px;
+  }
+
+  &:hover:not(.checkbox--disabled) {
+    border-color: $accent-color;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}

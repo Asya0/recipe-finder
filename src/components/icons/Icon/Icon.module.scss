@@ -1,0 +1,16 @@
+@use "@/styles/variables" as *;
+.icon {
+  &-color {
+    &-primary {
+      color: $primary-color;
+    }
+    
+    &-secondary {
+      color: $secondary-color;
+    }
+    
+    &-accent {
+      color: $accent-color;
+    }
+  }
+}

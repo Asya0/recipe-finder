@@ -1,0 +1,36 @@
+@use "@/styles/variables" as *;
+
+.search-bar {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+
+  &__input {
+    flex: 1;
+    height: 52px;
+  }
+
+  &__button {
+    width: 64px;
+    height: 52px;
+    background-color: $accent-color;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    img, 
+    svg {
+      width: 20px;
+      height: 20px;
+      filter: brightness(0) invert(1);
+    }
+    
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}

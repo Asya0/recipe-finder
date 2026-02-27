@@ -1,0 +1,74 @@
+@use "@/styles/variables" as *;
+.multi-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xxs;
+  position: relative; 
+
+  &-input {
+    width: 100%;
+    cursor: pointer;
+
+    :global(.after-slot) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+      
+      svg {
+        width: 20px;
+        height: 20px;
+        color: #AFADB5; 
+        transition: color 0.2s ease;
+      }
+    }
+
+
+    &:hover :global(.after-slot svg) {
+      color: $accent-color;
+    }
+  }
+
+  &--open {
+    .multi-dropdown-input :global(.after-slot) {
+      transform: rotate(180deg);
+    }
+  }
+
+  &-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: $button-primary-text;
+    box-shadow: 0px 4px 10px 0px #00000040;
+    color: $primary-color;
+    margin-top: 5px; 
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  &-option {
+    display: flex;
+    align-items: center;
+    padding: $space-s $space-xs;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $button-primary-bg-hover;
+    }
+
+    &--selected {
+      background-color: $accent-color;
+      color: white;
+    }
+  }
+
+  &--empty {
+    padding: $space-s $space-xs;
+    text-align: center;
+    color: #999;
+  }
+}

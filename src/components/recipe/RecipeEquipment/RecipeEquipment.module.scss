@@ -1,0 +1,41 @@
+@use "@/styles/variables" as *;
+@use "@/styles/mixins" as *;
+
+.equipment-section {
+  width: 100%;
+}
+
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+}
+
+.equipment-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.equipment-icon {
+  width: 20px;
+  height: 20px;
+  color: $accent-color;
+  flex-shrink: 0;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.equipment-name {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #333;
+}

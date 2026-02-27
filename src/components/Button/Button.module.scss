@@ -1,0 +1,28 @@
+@use "@/styles/variables" as *;
+.button {
+  padding: $space-s $space-l;
+  background-color: $accent-color;
+  gap: $space-xxs;
+  min-height: 52px;
+  border: none;
+  color: $button-primary-text;
+
+  &:hover:not(.button--disabled):not(.button--loading) {
+    background-color: $button-primary-bg-hover;
+  }
+
+  &:active {
+    background-color: $button-primary-bg-active;
+  }
+
+  &--disabled {
+    background-color: $button-primary-bg-disabled;
+  }
+
+  &--loading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+}

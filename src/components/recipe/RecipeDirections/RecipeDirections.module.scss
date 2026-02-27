@@ -1,0 +1,50 @@
+@use "@/styles/variables" as *;
+
+.directions-section {
+  margin-top: 48px;
+}
+
+.directions-title {
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 32px;
+  color: #333;
+  margin-bottom: 24px;
+}
+
+.directions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.step-item {
+  margin-bottom: 16px;
+  padding-left: 0;
+  
+  &::marker {
+    display: none;
+  }
+}
+
+.step-number {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: $primary-color;
+  margin-bottom: 8px;
+}
+
+.step-description {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: $primary-color;
+  margin: 0 0 12px 0;
+}
+
+.step-image {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 12px;
+}
