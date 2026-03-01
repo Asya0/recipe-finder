@@ -214,6 +214,14 @@
     }
   }
 
+  &__notFound {
+    color: #333;
+    justify-content: center;
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+  }
+
   &__gridItem {
     text-decoration: none;
     color: inherit;

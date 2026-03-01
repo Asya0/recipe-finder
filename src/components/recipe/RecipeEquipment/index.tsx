@@ -1,14 +1,14 @@
 import styles from './RecipeEquipment.module.scss';
 import { RecipeSectionHeader } from '../RecipeSectionHeader';
-import {EquipmentIcon} from "@/components";
-
+import { EquipmentIcon } from '@/components';
 import { Equipment } from '@/api/recipes';
+import { observer } from 'mobx-react-lite';
 
 interface RecipeEquipmentProps {
   equipment?: Equipment[];
 }
 
-export const RecipeEquipment: React.FC<RecipeEquipmentProps> = ({ equipment = [] }) => {
+export const RecipeEquipment = observer(({ equipment = [] }: RecipeEquipmentProps) => {
   if (!equipment.length) return null;
 
   return (
@@ -26,4 +26,4 @@ export const RecipeEquipment: React.FC<RecipeEquipmentProps> = ({ equipment = []
       </div>
     </div>
   );
-};
+});

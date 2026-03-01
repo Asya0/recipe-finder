@@ -1,49 +1,99 @@
-import apiClient  from '@/api/apiClient';
+import apiClient from '@/api/apiClient';
 import { Recipe, RecipesResponse } from './recipes';
 
-const PAGE_SIZE = 9; 
+const PAGE_SIZE = 9;
+
+const POPULATE_PARAMS = {
+  single: [
+    'ingradients',
+    'equipments',
+    'directions.image',
+    'images',
+    'category'
+  ],
+  list: ['images']
+};
 
 export const recipesApi = {
-  // Получение одного рецепта по documentId
   getRecipeById: async (documentId: string): Promise<Recipe> => {
-    const populateParams = [
-      'ingradients',
-      'equipments',
-      'directions.image',
-      'images',
-      'category',
-    ];
-
-    const queryString = populateParams
+    const populateParams = POPULATE_PARAMS.single
       .map((param, index) => `populate[${index}]=${param}`)
       .join('&');
 
     const response = await apiClient.get<{ data: Recipe }>(
-      `/api/recipes/${documentId}?${queryString}`
+      `/api/recipes/${documentId}?${populateParams}`
     );
     
     return response.data.data;
   },
 
-  // Получение списка рецептов с пагинацией
   getRecipes: async (page = 1, pageSize = PAGE_SIZE): Promise<RecipesResponse> => {
-    const url = `/api/recipes?populate[0]=images&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
+    const populateParams = POPULATE_PARAMS.list
+      .map((param, index) => `populate[${index}]=${param}`)
+      .join('&');
+    
+    const url = `/api/recipes?${populateParams}&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
     
     const response = await apiClient.get<RecipesResponse>(url);
     return response.data;
   },
 
-  // Получение рецептов с фильтрацией (если нужно)
   getRecipesByCategory: async (categoryId: string, page = 1, pageSize = PAGE_SIZE): Promise<RecipesResponse> => {
-    const url = `/api/recipes?filters[category][id][$eq]=${categoryId}&populate[0]=images&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
+    const populateParams = POPULATE_PARAMS.list
+      .map((param, index) => `populate[${index}]=${param}`)
+      .join('&');
+    
+    const url = `/api/recipes?filters[category][id][$eq]=${categoryId}&${populateParams}&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
     
     const response = await apiClient.get<RecipesResponse>(url);
     return response.data;
   },
 
-  // Поиск рецептов
   searchRecipes: async (searchTerm: string, page = 1, pageSize = PAGE_SIZE): Promise<RecipesResponse> => {
-    const url = `/api/recipes?filters[name][$containsi]=${searchTerm}&populate[0]=images&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
+    const populateParams = POPULATE_PARAMS.list
+      .map((param, index) => `populate[${index}]=${param}`)
+      .join('&');
+    
+    const url = `/api/recipes?filters[name][$containsi]=${encodeURIComponent(searchTerm)}&${populateParams}&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
+    
+    const response = await apiClient.get<RecipesResponse>(url);
+    return response.data;
+  },
+
+  getRecipesWithFilters: async (
+    filters: {
+      categoryId?: string;
+      vegetarian?: boolean;
+      minRating?: number;
+      maxTime?: number;
+    },
+    page = 1,
+    pageSize = PAGE_SIZE
+  ): Promise<RecipesResponse> => {
+    const populateParams = POPULATE_PARAMS.list
+      .map((param, index) => `populate[${index}]=${param}`)
+      .join('&');
+    
+    const filterParams: string[] = [];
+    
+    if (filters.categoryId) {
+      filterParams.push(`filters[category][id][$eq]=${filters.categoryId}`);
+    }
+    
+    if (filters.vegetarian !== undefined) {
+      filterParams.push(`filters[vegetarian][$eq]=${filters.vegetarian}`);
+    }
+    
+    if (filters.minRating && filters.minRating > 0) {
+      filterParams.push(`filters[rating][$gte]=${filters.minRating}`);
+    }
+    
+    if (filters.maxTime && filters.maxTime > 0) {
+      filterParams.push(`filters[totalTime][$lte]=${filters.maxTime}`);
+    }
+    
+    const filterString = filterParams.join('&');
+    const url = `/api/recipes?${filterString}${filterString ? '&' : ''}${populateParams}&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
     
     const response = await apiClient.get<RecipesResponse>(url);
     return response.data;

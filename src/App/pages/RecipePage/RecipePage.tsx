@@ -1,20 +1,20 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 import styles from './RecipePage.module.scss';
-import { Button, ErrorMessage, Loading } from '@/components';
-import { BackArrowIcon} from '@/components';
+import { BackArrowIcon, Button, ErrorMessage, Loading } from '@/components';
 import { type RecipeInfoItem, RECIPE_INFO_CONFIG } from './config';
 import { RecipeContent } from '@/components/recipe/RecipeContent';
-import { useRecipe } from '@/hooks/useRecipe';
+import { useRecipeStore } from '@/hooks/useRecipeStore';
 
-const RecipePage = () => {
-  const navigate = useNavigate();
-
-
+const RecipePage = observer(() => {
   const { documentId } = useParams<{ documentId: string }>();
-  const { recipe, loading, error } = useRecipe(documentId);
+  const navigate = useNavigate();
+  const recipeStore = useRecipeStore(documentId);
+
+  const { recipe, loading, error } = recipeStore;
 
   {
-    loading && <Loading  size="l" color="accent" />;
+    loading && <Loading size="l" color="accent" />;
   }
   {
     error && (
@@ -25,9 +25,9 @@ const RecipePage = () => {
   }
 
   if (!recipe) {
-    return <div className={styles.recipe}>Рецепт не найден</div>;
+    return <div className={styles.recipe__notFound}>Рецепт не найден</div>;
   }
-    
+
   return (
     <div className={styles.recipe}>
       <div className={styles.recipe__breadcrumbs}>
@@ -65,6 +65,6 @@ const RecipePage = () => {
       <RecipeContent recipe={recipe} />
     </div>
   );
-};
+});
 
 export default RecipePage;

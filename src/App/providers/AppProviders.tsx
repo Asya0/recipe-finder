@@ -1,8 +1,14 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { routesConfig } from '../../configs/routes';
+import React, { createContext } from 'react';
+import { RootStore } from '@/stores/RootStore';
 
-const router = createBrowserRouter(routesConfig);
+export const StoreContext = createContext<RootStore | null>(null);
 
-export const AppProviders = () => {
-  return <RouterProvider router={router} />;
+interface AppProvidersProps {
+  children: React.ReactNode;
+}
+
+export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
+  const rootStore = new RootStore();
+
+  return <StoreContext.Provider value={rootStore}>{children}</StoreContext.Provider>;
 };
