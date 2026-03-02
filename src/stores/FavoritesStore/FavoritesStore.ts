@@ -1,48 +1,40 @@
 import { makeObservable, observable, action, computed, runInAction } from 'mobx';
-import { Recipe } from '@/api/recipes';
-import apiClient from '@/api/apiClient';
 import { ILocalStore } from '../RootStore/ILocalStore';
+import { Recipe } from '@/api/recipes';
 
-type PrivateFields = '_favorites' | '_isLoading' | '_error';
+type PrivateFields = '_savedRecipes' | '_isLoading' | '_error';
 
-interface FavoritesResponse {
-  data: Array<{
-    id: number;
-    recipe: Recipe;
-  }>;
-}
+const SAVED_RECIPES_KEY = 'favorites';
 
 export class FavoritesStore implements ILocalStore {
-  private _favorites: Recipe[] = [];
+  private _savedRecipes: Recipe[] = [];
   private _isLoading: boolean = false;
   private _error: string | null = null;
 
   constructor() {
     makeObservable<FavoritesStore, PrivateFields>(this, {
-      _favorites: observable,
+      _savedRecipes: observable,
       _isLoading: observable,
       _error: observable,
-      
-      favorites: computed,
-      totalItems: computed,
+
+      savedRecipes: computed,
       isLoading: computed,
       error: computed,
-      
-      loadFavorites: action.bound,
-      addToFavorites: action.bound,
-      removeFromFavorites: action.bound,
-      clearFavorites: action.bound
+      savedCount: computed,
+
+      saveRecipe: action.bound,
+      removeRecipe: action.bound,
+      toggleSave: action.bound,
+      isSaved: action.bound,
+      loadFromStorage: action.bound,
+      clearAll: action.bound,
     });
 
-    this.loadFavorites();
+    this.loadFromStorage();
   }
 
-  get favorites(): Recipe[] {
-    return this._favorites;
-  }
-
-  get totalItems(): number {
-    return this._favorites.length;
+  get savedRecipes(): Recipe[] {
+    return this._savedRecipes;
   }
 
   get isLoading(): boolean {
@@ -53,93 +45,85 @@ export class FavoritesStore implements ILocalStore {
     return this._error;
   }
 
-  isFavorite(recipeId: number): boolean {
-    return this._favorites.some(recipe => recipe.id === recipeId);
+  get savedCount(): number {
+    return this._savedRecipes.length;
   }
 
-  private isAuthenticated(): boolean {
-    const token = localStorage.getItem('jwt');
-    return !!token;
+  isSaved(recipeId: number | string): boolean {
+    return this._savedRecipes.some(
+      recipe => recipe.id === recipeId || recipe.documentId === recipeId
+    );
   }
 
-  async loadFavorites(): Promise<void> {
-    if (!this.isAuthenticated()) {
+  saveRecipe(recipe: Recipe): void {
+    if (!this.isSaved(recipe.id)) {
       runInAction(() => {
-        this._favorites = [];
-        this._isLoading = false;
-        this._error = null;
+        this._savedRecipes.push(recipe);
+        this._saveToStorage();
       });
-      return;
     }
+  }
 
+  removeRecipe(recipeId: number | string): void {
+    runInAction(() => {
+      this._savedRecipes = this._savedRecipes.filter(
+        recipe => recipe.id !== recipeId && recipe.documentId !== recipeId
+      );
+      this._saveToStorage();
+    });
+  }
+
+  toggleSave(recipe: Recipe): void {
+    if (this.isSaved(recipe.id)) {
+      this.removeRecipe(recipe.id);
+    } else {
+      this.saveRecipe(recipe);
+    }
+  }
+
+  clearAll(): void {
+    runInAction(() => {
+      this._savedRecipes = [];
+      this._saveToStorage();
+    });
+  }
+
+  private _saveToStorage(): void {
+    try {
+      localStorage.setItem(SAVED_RECIPES_KEY, JSON.stringify(this._savedRecipes));
+    } catch (error) {
+      console.error('Failed to save recipes to localStorage:', error);
+      this._error = 'Не удалось сохранить рецепты';
+    }
+  }
+
+  loadFromStorage(): void {
     this._isLoading = true;
-    this._error = null;
     
     try {
-      const response = await apiClient.get<FavoritesResponse>('/api/favorites');
+      const saved = localStorage.getItem(SAVED_RECIPES_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        runInAction(() => {
+          this._savedRecipes = parsed;
+          this._error = null;
+        });
+      } else {
+        runInAction(() => {
+          this._savedRecipes = [];
+          this._error = null;
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load recipes from localStorage:', error);
       runInAction(() => {
-        this._favorites = response.data.data.map(item => item.recipe);
+        this._error = 'Не удалось загрузить сохраненные рецепты';
+      });
+    } finally {
+      runInAction(() => {
         this._isLoading = false;
       });
-    } catch (error) {
-      runInAction(() => {
-        console.error('Failed to load favorites:', error);
-        this._error = error instanceof Error ? error.message : 'Failed to load favorites';
-        this._isLoading = false;
-        this._favorites = [];
-      });
     }
-  }
-
-  async addToFavorites(recipe: Recipe): Promise<boolean> {
-    if (!this.isAuthenticated()) {
-      this._error = 'Необходимо авторизоваться';
-      return false;
-    }
-
-    if (this.isFavorite(recipe.id)) return true;
-    
-    try {
-      await apiClient.post('/api/favorites/add', { recipe: recipe.id });
-      runInAction(() => {
-        this._favorites.push(recipe);
-        this._error = null;
-      });
-      return true;
-    } catch (error) {
-      runInAction(() => {
-        console.error('Failed to add to favorites:', error);
-        this._error = error instanceof Error ? error.message : 'Failed to add to favorites';
-      });
-      return false;
-    }
-  }
-
-  async removeFromFavorites(recipeId: number): Promise<boolean> {
-    if (!this.isAuthenticated()) {
-      this._error = 'Необходимо авторизоваться';
-      return false;
-    }
-
-    try {
-      await apiClient.post('/api/favorites/remove', { recipe: recipeId });
-      runInAction(() => {
-        this._favorites = this._favorites.filter(recipe => recipe.id !== recipeId);
-        this._error = null;
-      });
-      return true;
-    } catch (error) {
-      runInAction(() => {
-        console.error('Failed to remove from favorites:', error);
-        this._error = error instanceof Error ? error.message : 'Failed to remove from favorites';
-      });
-      return false;
-    }
-  }
-
-  clearFavorites(): void {
-    this._favorites = [];
-    this._error = null;
   }
 
   destroy(): void {

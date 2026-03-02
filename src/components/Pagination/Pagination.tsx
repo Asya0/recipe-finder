@@ -28,7 +28,7 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   const getPageNumbers = () => {
-    const delta = 2; // сколько страниц показывать слева и справа от текущей
+    const delta = 2;
     const range = [];
     const rangeWithDots: PageItem[] = [];
     let l: number | undefined;
@@ -72,7 +72,6 @@ const Pagination: React.FC<PaginationProps> = ({
           <div
             key={page === '...' ? `ellipsis-${index}` : page}
             onClick={() => (typeof page === 'number' ? onPageChange(page) : undefined)}
-            // disabled={page === '...'}
             className={`${styles.pageButton} ${
               currentPage === page ? styles.activePage : ''
             } ${page === '...' ? styles.dots : ''}`}

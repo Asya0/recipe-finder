@@ -9,44 +9,73 @@ import {
   Button,
   Loading,
   Card,
+  CheckBox,
+  SearchBar,
   ErrorMessage,
   type Option,
 } from '@/components';
-import { categoryOptions } from './config';
-import SearchBar from '@/components/SearchBar/SearchBar';
 import { useRootStore } from '@/hooks/useRootStore';
+import { useCategories } from '@/hooks/useCategories';
 
 const RecipesPage = observer(() => {
-  const { recipes } = useRootStore();
+  const { recipes, favorites } = useRootStore();
+  const { categories, loading: categoriesLoading, error: categoriesError } = useCategories();
   const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
   const [searchValue, setSearchValue] = useState(recipes.searchQuery);
+  const [vegetarian, setVegetarian] = useState(recipes.filters.vegetarian === true);
 
   const categoryId = recipes.filters.categoryId;
-  const category = categoryOptions.find((opt) => opt.key === categoryId);
+  const category = categories.find((opt) => opt.key === categoryId);
 
   useEffect(() => {
-    if (categoryId) {
-      if (category) {
-        setSelectedCategories([category]);
-      }
+    if (categoryId && category) {
+      setSelectedCategories([category]);
     } else {
       setSelectedCategories([]);
     }
   }, [categoryId, category]);
+
+  useEffect(() => {
+    setVegetarian(recipes.filters.vegetarian === true);
+  }, [recipes.filters.vegetarian]);
 
   const handleSearch = () => {
     recipes.setSearchQuery(searchValue);
   };
 
   const handleCategoryChange = (options: Option[]) => {
-    setSelectedCategories(options);
-    const categoryId = options[0]?.key || null;
+    const lastSelected = options.length > 0 ? [options[options.length - 1]] : [];
+
+    setSelectedCategories(lastSelected);
+    const categoryId = lastSelected[0]?.key || null;
     recipes.setFilter('categoryId', categoryId);
+  };
+  const handleVegetarianChange = (checked: boolean) => {
+    setVegetarian(checked);
+    recipes.setFilter('vegetarian', checked);
   };
 
   const handlePageChange = (page: number) => {
     recipes.setPage(page);
   };
+
+  const handleSaveClick = (e: React.MouseEvent, recipe: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    favorites.toggleSave(recipe);
+  };
+
+  if (categoriesLoading) {
+    return <Loading size="l" color="accent" />;
+  }
+
+  if (categoriesError) {
+    return (
+      <ErrorMessage error={categoriesError}>
+        <Button onClick={() => window.location.reload()}>Повторить попытку</Button>
+      </ErrorMessage>
+    );
+  }
 
   return (
     <div className={styles['recipes-page']}>
@@ -72,18 +101,30 @@ const RecipesPage = observer(() => {
           onSearch={handleSearch}
         />
 
-        <div className={styles['recipes-page__categoryRow']}>
-          <MultiDropdown
-            options={categoryOptions}
-            value={selectedCategories}
-            onChange={handleCategoryChange}
-            getTitle={(values) => {
-              if (values.length === 0) return 'Categories';
-              if (values.length === 1) return values[0].value;
-              return `Выбрано: ${values.length}`;
-            }}
-            className={styles['recipes-page__categoryDropdown']}
-          />
+        <div className={styles['recipes-page__filtersRow']}>
+          <div className={styles['recipes-page__vegetarianRow']}>
+            <CheckBox
+              checked={vegetarian}
+              onChange={handleVegetarianChange}
+              disabled={recipes.isLoading}
+              className={styles['recipes-page__checkbox']}
+            ></CheckBox>
+            Vegetarian
+          </div>
+
+          <div className={styles['recipes-page__categoryRow']}>
+            <MultiDropdown
+              options={categories}
+              value={selectedCategories}
+              onChange={handleCategoryChange}
+              getTitle={(values) => {
+                if (values.length === 0) return 'Categories';
+                if (values.length === 1) return values[0].value;
+                return `Выбрано: ${values.length}`;
+              }}
+              className={styles['recipes-page__categoryDropdown']}
+            />
+          </div>
         </div>
 
         {recipes.isLoading ? (
@@ -95,26 +136,37 @@ const RecipesPage = observer(() => {
         ) : (
           recipes.filteredRecipes.length > 0 && (
             <div className={styles['recipes-page__grid']}>
-              {recipes.filteredRecipes.map((recipe) => (
-                <Link
-                  to={`/recipe/${recipe.documentId}`}
-                  key={recipe.id}
-                  className={styles['recipes-page__gridItem']}
-                >
-                  <Card
-                    image={recipes.getRecipeImageUrl(recipe)}
-                    title={recipe.name}
-                    subtitle={recipe.summary}
-                    cookingTime={recipe.cookingTime}
-                    actionSlot={<Button>Save</Button>}
-                    contentSlot={recipe.calories}
-                  />
-                </Link>
-              ))}
+              {recipes.filteredRecipes.map((recipe) => {
+                const isSaved = favorites.isSaved(recipe.id);
+
+                return (
+                  <Link
+                    to={`/recipe/${recipe.documentId}`}
+                    key={recipe.id}
+                    className={styles.recipeCardLink}
+                  >
+                    <Card
+                      image={recipes.getRecipeImageUrl(recipe)}
+                      cookingTime={recipe.cookingTime}
+                      title={recipe.name}
+                      subtitle={recipe.summary}
+                      contentSlot={Math.round(recipe.calories).toString()}
+                      actionSlot={
+                        <Button
+                          onClick={(e) => handleSaveClick(e, recipe)}
+                          className={isSaved ? styles.savedButton : styles.saveButton}
+                        >
+                          {isSaved ? 'Saved' : 'Save'}
+                        </Button>
+                      }
+                    />
+                  </Link>
+                );
+              })}
             </div>
           )
         )}
-        {recipes.filteredRecipes.length === 0 && (
+        {recipes.filteredRecipes.length === 0 && !recipes.isLoading && (
           <div className={styles['recipes-page__notFound']}>
             По вашему запросу ничего не найдено :с
           </div>

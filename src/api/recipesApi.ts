@@ -1,5 +1,6 @@
 import apiClient from '@/api/apiClient';
 import { Recipe, RecipesResponse } from './recipes';
+import qs from 'qs';
 
 const PAGE_SIZE = 9;
 
@@ -27,16 +28,26 @@ export const recipesApi = {
     return response.data.data;
   },
 
-  getRecipes: async (page = 1, pageSize = PAGE_SIZE): Promise<RecipesResponse> => {
-    const populateParams = POPULATE_PARAMS.list
-      .map((param, index) => `populate[${index}]=${param}`)
-      .join('&');
-    
-    const url = `/api/recipes?${populateParams}&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
-    
-    const response = await apiClient.get<RecipesResponse>(url);
-    return response.data;
-  },
+getRecipes: async (page: number = 1, pageSize: number = PAGE_SIZE, filters?: any): Promise<RecipesResponse> => {
+  const params: any = {
+    populate: POPULATE_PARAMS.list, 
+    pagination: {
+      page,
+      pageSize,
+    },
+  };
+
+  if (filters) {
+    params.filters = filters;
+  }
+
+  const queryString = qs.stringify(params, {
+    encodeValuesOnly: true, 
+  });
+
+  const response = await apiClient.get<RecipesResponse>(`/api/recipes?${queryString}`);
+  return response.data;
+},
 
   getRecipesByCategory: async (categoryId: string, page = 1, pageSize = PAGE_SIZE): Promise<RecipesResponse> => {
     const populateParams = POPULATE_PARAMS.list

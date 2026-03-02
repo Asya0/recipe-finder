@@ -13,35 +13,35 @@ $breakpoints: (
 );
 
 @mixin phone {
-  @media (min-width: map.get($breakpoints, phone)) { @content; }
+  @media (max-width: map.get($breakpoints, phone)) { @content; }
 }
 
 @mixin phone-lg {
-  @media (min-width: map.get($breakpoints, phone-lg)) { @content; }
+  @media (max-width: map.get($breakpoints, phone-lg)) { @content; }
 }
 
 @mixin tablet {
-  @media (min-width: map.get($breakpoints, tablet)) { @content; }
+  @media (max-width: map.get($breakpoints, tablet)) { @content; }
 }
 
 @mixin tablet-lg {
-  @media (min-width: map.get($breakpoints, tablet-lg)) { @content; }
+  @media (max-width: map.get($breakpoints, tablet-lg)) { @content; }
 }
 
 @mixin desktop {
-  @media (min-width: map.get($breakpoints, desktop)) { @content; }
+  @media (max-width: map.get($breakpoints, desktop)) { @content; }
 }
 
 @mixin desktop-lg {
-  @media (min-width: map.get($breakpoints, desktop-lg)) { @content; }
+  @media (max-width: map.get($breakpoints, desktop-lg)) { @content; }
 }
 
 @mixin desktop-xl {
-  @media (min-width: map.get($breakpoints, desktop-xl)) { @content; }
+  @media (max-width: map.get($breakpoints, desktop-xl)) { @content; }
 }
 
 @mixin desktop-xxl {
-  @media (min-width: map.get($breakpoints, desktop-xxl)) { @content; }
+  @media (max-width: map.get($breakpoints, desktop-xxl)) { @content; }
 }
 
 @mixin phone-only {
@@ -73,5 +73,5 @@ $breakpoints: (
 }
 
 @mixin between($min, $max) {
-  @media (min-width: $min) and (max-width: $max) { @content; }
+  @media (max-width: $min) and (max-width: $max) { @content; }
 }
