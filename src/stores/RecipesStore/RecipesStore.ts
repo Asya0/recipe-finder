@@ -24,8 +24,6 @@ type PrivateFields =
 
 export interface RecipesFilter {
   vegetarian?: boolean | null;
-  minRating?: number;
-  maxTotalTime?: number | null;
   categoryId?: string | null;
 }
 
@@ -130,11 +128,9 @@ export class RecipesStore implements ILocalStore {
 
 
   get filters(): RecipesFilter {
-  const { vegetarian, minRating, maxTime, category } = this._queryParams.filters;
+  const { vegetarian, category } = this._queryParams.filters;
   return {
     vegetarian: vegetarian === 'true' ? true : vegetarian === 'false' ? false : null,
-    minRating: minRating ? Number(minRating) : 0,
-    maxTotalTime: maxTime ? Number(maxTime) : null,
     categoryId: category || null
   };
 }
@@ -224,12 +220,6 @@ export class RecipesStore implements ILocalStore {
     switch (key) {
       case 'vegetarian':
         this._queryParams.setFilter('vegetarian', stringValue);
-        break;
-      case 'minRating':
-        this._queryParams.setFilter('minRating', stringValue);
-        break;
-      case 'maxTotalTime':
-        this._queryParams.setFilter('maxTime', stringValue);
         break;
       case 'categoryId':
         this._queryParams.setFilter('category', stringValue);

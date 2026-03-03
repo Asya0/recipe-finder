@@ -1,72 +1,53 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import styles from './FavoritesPage.module.scss';
 import { Button, Loading, Card, ErrorMessage, Pagination } from '@/components';
 import { useRootStore } from '@/hooks/useRootStore';
 import { Recipe } from '@/api/recipes';
+import { usePaginationWithUrl } from '@/hooks/usePaginationWithUrl';
 
 const PAGE_SIZE = 9;
 
+
 const FavoritesPage = observer(() => {
   const { favorites } = useRootStore();
-  const navigate = useNavigate();
-  const location = useLocation();
+  
+  const totalPages = Math.ceil(favorites.savedCount / PAGE_SIZE);
 
-  const getPageFromUrl = () => {
-    const params = new URLSearchParams(location.search);
-    const page = parseInt(params.get('page') || '1');
-    return page > 0 ? page : 1;
-  };
-
-  const [currentPage, setCurrentPage] = useState(getPageFromUrl());
-
-  const updateUrlWithPage = (page: number) => {
-    const params = new URLSearchParams(location.search);
-    if (page > 1) {
-      params.set('page', page.toString());
-    } else {
-      params.delete('page');
-    }
-
-    const newSearch = params.toString();
-    navigate(
-      {
-        pathname: location.pathname,
-        search: newSearch ? `?${newSearch}` : '',
-      },
-      { replace: true }
-    );
-  };
+  const { currentPage, handlePageChange } = usePaginationWithUrl({
+    totalPages,
+    defaultPage: 1,
+    scrollToTop: true,
+  });
+  
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const currentRecipes = favorites.savedRecipes.slice(startIndex, endIndex);
 
   useEffect(() => {
     favorites.loadFromStorage();
   }, []);
 
-  useEffect(() => {
-    const pageFromUrl = getPageFromUrl();
-    if (pageFromUrl !== currentPage) {
-      setCurrentPage(pageFromUrl);
-    }
-  }, [location.search]);
 
   const handleRemove = (recipe: Recipe, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    const oldTotalPages = Math.ceil(favorites.savedCount / PAGE_SIZE);
+    const isLastItemOnPage = currentRecipes.length === 1 && currentPage === oldTotalPages;
+    
     favorites.removeRecipe(recipe.id);
-
-    const newTotalPages = Math.ceil((favorites.savedCount - 1) / PAGE_SIZE);
-    if (currentPage > newTotalPages && newTotalPages > 0) {
-      const newPage = newTotalPages;
-      setCurrentPage(newPage);
-      updateUrlWithPage(newPage);
-    }
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    updateUrlWithPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    setTimeout(() => {
+      const newTotalPages = Math.ceil(favorites.savedCount / PAGE_SIZE);
+      
+      if (isLastItemOnPage && currentPage > newTotalPages && newTotalPages > 0) {
+        handlePageChange(newTotalPages);
+      } else if (favorites.savedCount === 0) {
+        handlePageChange(1);
+      }
+    }, 0);
   };
 
   if (favorites.isLoading) {
@@ -87,10 +68,7 @@ const FavoritesPage = observer(() => {
     );
   }
 
-  const totalPages = Math.ceil(favorites.savedCount / PAGE_SIZE);
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const currentRecipes = favorites.savedRecipes.slice(startIndex, endIndex);
+
 
   return (
     <div className={styles.favoritesPage}>

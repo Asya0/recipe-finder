@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import styles from './RecipesPage.module.scss';
 import banner from '@/assets/header-bg.png';
@@ -16,13 +16,23 @@ import {
 } from '@/components';
 import { useRootStore } from '@/hooks/useRootStore';
 import { useCategories } from '@/hooks/useCategories';
+import { usePaginationWithUrl } from '@/hooks/usePaginationWithUrl';
 
 const RecipesPage = observer(() => {
   const { recipes, favorites } = useRootStore();
+  const navigate = useNavigate();
   const { categories, loading: categoriesLoading, error: categoriesError } = useCategories();
+  const { handlePageChange } = usePaginationWithUrl({
+    totalPages: recipes.totalPages,
+    defaultPage: recipes.currentPage,
+    onPageChange: (page) => recipes.setPage(page),
+    scrollToTop: true,
+  });
   const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
   const [searchValue, setSearchValue] = useState(recipes.searchQuery);
   const [vegetarian, setVegetarian] = useState(recipes.filters.vegetarian === true);
+
+  const [, setSavedStates] = useState<Record<string | number, boolean>>({});
 
   const categoryId = recipes.filters.categoryId;
   const category = categories.find((opt) => opt.key === categoryId);
@@ -39,8 +49,24 @@ const RecipesPage = observer(() => {
     setVegetarian(recipes.filters.vegetarian === true);
   }, [recipes.filters.vegetarian]);
 
+  useEffect(() => {
+    const initialStates: Record<string | number, boolean> = {};
+    recipes.filteredRecipes.forEach(recipe => {
+      initialStates[recipe.id] = favorites.isSaved(recipe.id);
+    });
+    setSavedStates(initialStates);
+  }, [recipes.filteredRecipes, favorites]);
+  
+
   const handleSearch = () => {
     recipes.setSearchQuery(searchValue);
+    recipes.setPage(1);
+    updateUrlWithFilters(
+      searchValue, 
+      recipes.filters.categoryId, 
+      recipes.filters.vegetarian === true,
+      1
+    );
   };
 
   const handleCategoryChange = (options: Option[]) => {
@@ -49,20 +75,53 @@ const RecipesPage = observer(() => {
     setSelectedCategories(lastSelected);
     const categoryId = lastSelected[0]?.key || null;
     recipes.setFilter('categoryId', categoryId);
+    recipes.setPage(1);
+
+    updateUrlWithFilters(
+      recipes.searchQuery,
+      categoryId,
+      recipes.filters.vegetarian === true,
+      1
+    );
   };
   const handleVegetarianChange = (checked: boolean) => {
     setVegetarian(checked);
     recipes.setFilter('vegetarian', checked);
-  };
+    recipes.setPage(1);
 
-  const handlePageChange = (page: number) => {
-    recipes.setPage(page);
+    updateUrlWithFilters(
+      recipes.searchQuery,
+      recipes.filters.categoryId,
+      checked,
+      1
+    );
   };
 
   const handleSaveClick = (e: React.MouseEvent, recipe: any) => {
     e.preventDefault();
     e.stopPropagation();
+    setSavedStates(prev => ({
+      ...prev,
+      [recipe.id]: !prev[recipe.id]
+    }));
     favorites.toggleSave(recipe);
+  };
+
+  const updateUrlWithFilters = (search: string,  categoryId: string | null | undefined, vegetarian: boolean, page: number) => {
+    const params = new URLSearchParams(location.search);
+    
+    if (search) params.set('search', search);
+    else params.delete('search');
+    
+    if (categoryId) params.set('category', categoryId);
+    else params.delete('category');
+    
+    if (vegetarian) params.set('vegetarian', 'true');
+    else params.delete('vegetarian');
+
+    if (page > 1) params.set('page', page.toString());
+    
+    navigate({ search: params.toString() }, { replace: true });
   };
 
   if (categoriesLoading) {
