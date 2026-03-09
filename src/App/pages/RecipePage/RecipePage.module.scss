@@ -34,6 +34,14 @@
     padding: 8px;
   }
 
+    &__notFound {
+    color: #333;
+    justify-content: center;
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+  }
+
   &__breadcrumbs {
     display: flex;
     align-items: center;

@@ -1,13 +1,14 @@
 import styles from './RecipeIngredients.module.scss';
 import { RecipeSectionHeader } from '../RecipeSectionHeader';
-import {IngredientIcon} from "@/components";
+import { IngredientIcon } from '@/components';
 import { Ingredient } from '@/api/recipes';
+import { observer } from 'mobx-react-lite';
 
 interface RecipeIngredientsProps {
   ingredients?: Ingredient[];
 }
 
-export const RecipeIngredients: React.FC<RecipeIngredientsProps> = ({ ingredients = [] }) => {
+export const RecipeIngredients = observer(({ ingredients = [] }: RecipeIngredientsProps) => {
   if (!ingredients.length) return null;
 
   return (
@@ -27,4 +28,4 @@ export const RecipeIngredients: React.FC<RecipeIngredientsProps> = ({ ingredient
       </div>
     </div>
   );
-};
+});

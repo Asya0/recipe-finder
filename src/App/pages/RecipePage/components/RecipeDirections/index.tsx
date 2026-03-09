@@ -1,12 +1,12 @@
-import React from 'react';
 import styles from './RecipeDirections.module.scss';
-import { Direction  } from '@/api/recipes';
+import { Direction } from '@/api/recipes';
+import { observer } from 'mobx-react-lite';
 
 interface RecipeDirectionsProps {
   directions?: Direction[];
 }
 
-export const RecipeDirections: React.FC<RecipeDirectionsProps> = ({ directions = [] }) => {
+export const RecipeDirections = observer(({ directions = [] }: RecipeDirectionsProps) => {
   if (!directions.length) return null;
 
   return (
@@ -30,4 +30,4 @@ export const RecipeDirections: React.FC<RecipeDirectionsProps> = ({ directions =
       </ol>
     </div>
   );
-};
+});

@@ -1,10 +1,10 @@
-import { Navigate, RouteObject } from 'react-router';
+import { createBrowserRouter, Navigate } from 'react-router';
 import App from '../App';
 import RecipePage from '@/App/pages/RecipePage/RecipePage';
 import FavoritesPage from '@/App/pages/FavoritesPage/FavoritesPage';
 import RecipesPage from '@/App/pages/RecipesPage/RecipesPage';
 
-export const routesConfig: RouteObject[] = [
+export const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
@@ -47,4 +47,4 @@ export const routesConfig: RouteObject[] = [
       },
     ],
   },
-];
+]);

@@ -1,51 +1,81 @@
-import apiClient  from '@/api/apiClient';
+import apiClient from '@/api/apiClient';
 import { Recipe, RecipesResponse } from './recipes';
 
-const PAGE_SIZE = 9; 
+const PAGE_SIZE = 9;
+
+const POPULATE_PARAMS = {
+  single: ['ingradients', 'equipments', 'directions.image', 'images', 'category'],
+  list: ['images'],
+};
 
 export const recipesApi = {
-  // Получение одного рецепта по documentId
   getRecipeById: async (documentId: string): Promise<Recipe> => {
-    const populateParams = [
-      'ingradients',
-      'equipments',
-      'directions.image',
-      'images',
-      'category',
-    ];
-
-    const queryString = populateParams
-      .map((param, index) => `populate[${index}]=${param}`)
-      .join('&');
-
-    const response = await apiClient.get<{ data: Recipe }>(
-      `/api/recipes/${documentId}?${queryString}`
-    );
-    
+    const response = await apiClient.get<{ data: Recipe }>(`/api/recipes/${documentId}`, {
+      params: {
+        populate: POPULATE_PARAMS.single,
+      },
+    });
     return response.data.data;
   },
 
-  // Получение списка рецептов с пагинацией
-  getRecipes: async (page = 1, pageSize = PAGE_SIZE): Promise<RecipesResponse> => {
-    const url = `/api/recipes?populate[0]=images&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
-    
-    const response = await apiClient.get<RecipesResponse>(url);
+  getRecipes: async (
+    page: number = 1,
+    pageSize: number = PAGE_SIZE,
+    filters?: any
+  ): Promise<RecipesResponse> => {
+    const params: any = {
+      populate: POPULATE_PARAMS.list,
+      pagination: {
+        page,
+        pageSize,
+      },
+    };
+
+    if (filters) {
+      params.filters = filters;
+    }
+
+    const response = await apiClient.get<RecipesResponse>('/api/recipes', { params });
     return response.data;
   },
 
-  // Получение рецептов с фильтрацией (если нужно)
-  getRecipesByCategory: async (categoryId: string, page = 1, pageSize = PAGE_SIZE): Promise<RecipesResponse> => {
-    const url = `/api/recipes?filters[category][id][$eq]=${categoryId}&populate[0]=images&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
-    
-    const response = await apiClient.get<RecipesResponse>(url);
+  getRecipesByIds: async (ids: string[], page = 1, pageSize = 100): Promise<RecipesResponse> => {
+    const params = {
+      populate: POPULATE_PARAMS.list,
+      pagination: {
+        page,
+        pageSize,
+      },
+      filters: {
+        documentId: {
+          $in: ids,
+        },
+      },
+    };
+
+    const response = await apiClient.get<RecipesResponse>('/api/recipes', { params });
     return response.data;
   },
 
-  // Поиск рецептов
-  searchRecipes: async (searchTerm: string, page = 1, pageSize = PAGE_SIZE): Promise<RecipesResponse> => {
-    const url = `/api/recipes?filters[name][$containsi]=${searchTerm}&populate[0]=images&pagination[pageSize]=${pageSize}&pagination[page]=${page}`;
-    
-    const response = await apiClient.get<RecipesResponse>(url);
+  searchRecipes: async (
+    searchTerm: string,
+    page = 1,
+    pageSize = PAGE_SIZE
+  ): Promise<RecipesResponse> => {
+    const params = {
+      populate: POPULATE_PARAMS.list,
+      pagination: {
+        page,
+        pageSize,
+      },
+      filters: {
+        name: {
+          $containsi: searchTerm,
+        },
+      },
+    };
+
+    const response = await apiClient.get<RecipesResponse>('/api/recipes', { params });
     return response.data;
-  }
+  },
 };
