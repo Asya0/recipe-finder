@@ -1,7 +1,7 @@
 import { makeObservable, observable, action, computed, runInAction } from 'mobx';
 import { recipesApi } from '@/api/recipesApi';
 import { Recipe } from '@/api/recipes';
-import { ILocalStore } from '../RootStore/ILocalStore';
+import { ILocalStore } from '@/stores/RootStore';
 
 type PrivateFields = '_isLoading' | '_error' | '_recipe' | '_documentId';
 

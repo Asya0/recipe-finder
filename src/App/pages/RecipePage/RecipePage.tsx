@@ -3,27 +3,24 @@ import { observer } from 'mobx-react-lite';
 import styles from './RecipePage.module.scss';
 import { BackArrowIcon, Button, ErrorMessage, Loading } from '@/components';
 import { type RecipeInfoItem, RECIPE_INFO_CONFIG } from './config';
-import { RecipeContent } from '@/components/recipe/RecipeContent';
-import { useRecipeStore } from '@/hooks/useRecipeStore';
+import { RecipeContent } from '@/App/pages/RecipePage/components/RecipeContent';
+import { RecipeStoreProvider, useRecipeStore } from './models/context';
 
-const RecipePage = observer(() => {
-  const { documentId } = useParams<{ documentId: string }>();
+const RecipePageContent = observer(() => {
   const navigate = useNavigate();
-  const recipeStore = useRecipeStore(documentId);
-
+  const recipeStore = useRecipeStore();
   const { recipe, loading, error } = recipeStore;
 
-  {
-    loading && <Loading size="l" color="accent" />;
+  if (loading) {
+    return <Loading size="l" color="accent" />;
   }
-  {
-    error && (
+  if (error) {
+    return (
       <ErrorMessage error={error}>
         <Button onClick={() => navigate(-1)}>Вернуться назад</Button>
       </ErrorMessage>
     );
   }
-
   if (!recipe) {
     return <div className={styles.recipe__notFound}>Рецепт не найден</div>;
   }
@@ -66,5 +63,19 @@ const RecipePage = observer(() => {
     </div>
   );
 });
+
+const RecipePage = () => {
+  const { documentId } = useParams<{ documentId: string }>();
+
+  if (!documentId) {
+    return <div className={styles.recipe__notFound}>ID рецепта не указан</div>;
+  }
+
+  return (
+    <RecipeStoreProvider documentId={documentId}>
+      <RecipePageContent />
+    </RecipeStoreProvider>
+  );
+};
 
 export default RecipePage;

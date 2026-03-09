@@ -9,15 +9,25 @@ interface SearchBarProps {
   onSearch: () => void;
   className?: string;
   placeholder?: string;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
-const SearchBar: FC<SearchBarProps> = ({ value, onChange, onSearch, className, placeholder }) => {
+const SearchBar: FC<SearchBarProps> = ({
+  value,
+  onChange,
+  onSearch,
+  className,
+  placeholder,
+  onKeyDown,
+}) => {
   return (
     <div className={`${styles['search-bar']} ${className || ''}`}>
       <Input
         placeholder={placeholder}
         value={value}
+        // onChange={(e) => onChange(e.target.value)}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         className={styles['search-bar__input']}
       />
       <Button className={styles['search-bar__button']} onClick={onSearch}>

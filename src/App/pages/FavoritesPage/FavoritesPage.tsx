@@ -1,56 +1,44 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import styles from './FavoritesPage.module.scss';
 import { Button, Loading, Card, ErrorMessage, Pagination } from '@/components';
 import { useRootStore } from '@/hooks/useRootStore';
 import { Recipe } from '@/api/recipes';
-import { usePaginationWithUrl } from '@/hooks/usePaginationWithUrl';
+import { usePagination } from '@/hooks/usePagination';
 
 const PAGE_SIZE = 9;
 
-
 const FavoritesPage = observer(() => {
   const { favorites } = useRootStore();
-  
+  const [currentPage, setCurrentPage] = useState(1);
+
   const totalPages = Math.ceil(favorites.savedCount / PAGE_SIZE);
 
-  const { currentPage, handlePageChange } = usePaginationWithUrl({
+  const { handlePageChange } = usePagination({
     totalPages,
-    defaultPage: 1,
+    currentPage,
+    onPageChange: (page) => setCurrentPage(page),
     scrollToTop: true,
   });
-  
+
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
   const currentRecipes = favorites.savedRecipes.slice(startIndex, endIndex);
 
   useEffect(() => {
-    favorites.loadFromStorage();
-  }, []);
+    favorites.fetchFavoriteRecipes();
+  }, [favorites.favoriteIds.length]);
 
-
-  const handleRemove = (recipe: Recipe, e: React.MouseEvent) => {
+  const handleRemove = async (recipe: Recipe, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    const oldTotalPages = Math.ceil(favorites.savedCount / PAGE_SIZE);
-    const isLastItemOnPage = currentRecipes.length === 1 && currentPage === oldTotalPages;
-    
-    favorites.removeRecipe(recipe.id);
-    
-    setTimeout(() => {
-      const newTotalPages = Math.ceil(favorites.savedCount / PAGE_SIZE);
-      
-      if (isLastItemOnPage && currentPage > newTotalPages && newTotalPages > 0) {
-        handlePageChange(newTotalPages);
-      } else if (favorites.savedCount === 0) {
-        handlePageChange(1);
-      }
-    }, 0);
+
+    const recipeId = recipe.documentId || String(recipe.id);
+    await favorites.removeFavorite(recipeId);
   };
 
-  if (favorites.isLoading) {
+  if (favorites.isLoading && favorites.savedCount > 0) {
     return (
       <div className={styles.contentContainer}>
         <Loading size="l" color="accent" />
@@ -62,13 +50,11 @@ const FavoritesPage = observer(() => {
     return (
       <div className={styles.contentContainer}>
         <ErrorMessage error={favorites.error}>
-          <Button onClick={() => favorites.loadFromStorage()}>Повторить попытку</Button>
+          <Button onClick={() => favorites.fetchFavoriteRecipes()}>Повторить попытку</Button>
         </ErrorMessage>
       </div>
     );
   }
-
-
 
   return (
     <div className={styles.favoritesPage}>

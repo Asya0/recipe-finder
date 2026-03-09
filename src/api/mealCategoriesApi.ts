@@ -1,30 +1,26 @@
 import apiClient from '@/api/apiClient';
 import { MealCategory } from '@/types/meal-category';
-import qs from 'qs';
 
 export const mealCategoriesApi = {
   getCategories: async (): Promise<MealCategory[]> => {
-    
     const params = {
       populate: '*',
       pagination: {
         pageSize: 100,
       },
+      sort: 'title:asc',
     };
     
-    const queryString = qs.stringify(params, {
-      encodeValuesOnly: true,
-    });
-    
-    const url = `/api/meal-categories?${queryString}`;
-    
-    try {
-      const response = await apiClient.get(url);
-      
-      return response.data.data;
-    } catch (error) {
-      console.debug('❌ Ошибка запроса:', error);
-      throw error;
-    }
+    const response = await apiClient.get('/api/meal-categories', { params });
+    return response.data.data;
   },
+
+  getCategoryById: async (id: string): Promise<MealCategory> => {
+    const response = await apiClient.get(`/api/meal-categories/${id}`, {
+      params: {
+        populate: '*',
+      }
+    });
+    return response.data.data;
+  }
 };

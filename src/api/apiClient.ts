@@ -1,4 +1,5 @@
 import axios from "axios";
+import qs from 'qs';
 
 const apiClient = axios.create({
   baseURL: "https://front-school-strapi.ktsdev.ru",
@@ -6,11 +7,19 @@ const apiClient = axios.create({
   //   'Authorization': `Bearer ${import.meta.env.VITE_STRAPI_TOKEN}`,
   //   'Content-Type': 'application/json'
   // },
-})
+});
+
+apiClient.interceptors.request.use((config) => {
+  if (config.params) {
+    config.paramsSerializer = (params) => {
+      return qs.stringify(params, {
+        encodeValuesOnly: true, 
+        indices: false, 
+        arrayFormat: 'repeat', 
+      });
+    };
+  }
+  return config;
+});
 
 export default apiClient;
-
-
-// headers: { ... } -- содержит дополнительную информацию о запросе
-// Bearer -- тип авторизации. "Я предъявитель вот этого токена, разрешите мне войти"
-// ${import.meta.env.VITE_STRAPI_TOKEN} --  переменная окружения. это способ Vite прочитать переменные из .env файла. Приставка VITE_ обязательна, чтобы Vite понял, что эту переменную можно использовать в браузере.

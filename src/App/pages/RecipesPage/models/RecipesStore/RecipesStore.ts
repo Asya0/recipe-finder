@@ -8,9 +8,11 @@ import {
   runInAction,
 } from 'mobx';
 import { recipesApi } from '@/api/recipesApi';
+import { mealCategoriesApi } from '@/api/mealCategoriesApi';
 import { Recipe, RecipesResponse } from '@/api/recipes';
-import { ILocalStore } from '../RootStore/ILocalStore';
-import { QueryParamsStore } from '../RootStore/QueryParamsStore/QueryParamsStore';
+import { ILocalStore } from '@/stores/RootStore/ILocalStore';
+import { QueryParamsStore } from '@/stores/RootStore/QueryParamsStore/QueryParamsStore';
+import { Option } from '@/components';
 
 type PrivateFields =
   | '_recipes'
@@ -20,7 +22,10 @@ type PrivateFields =
   | '_totalPages'
   | '_totalItems'
   | '_pageSize'
-  | '_queryParams';
+  | '_queryParams'
+  | '_categories'
+  | '_categoriesLoading'
+  | '_categoriesError';
 
 export interface RecipesFilter {
   vegetarian?: boolean | null;
@@ -37,11 +42,15 @@ export class RecipesStore implements ILocalStore {
   private _pageSize: number = 9;
   private _queryParams: QueryParamsStore;
 
+  private _categories: Option[] = [];
+  private _categoriesLoading: boolean = false;
+  private _categoriesError: string | null = null;
+
   private readonly _searchReactionDisposer: IReactionDisposer;
   private readonly _filterReactionDisposer: IReactionDisposer;
 
-  constructor(queryParams: QueryParamsStore) {
-    this._queryParams = queryParams;
+  constructor(queryParams?: QueryParamsStore) {
+    this._queryParams = queryParams || new QueryParamsStore();
 
     makeObservable<RecipesStore, PrivateFields>(this, {
       _recipes: observable,
@@ -52,6 +61,10 @@ export class RecipesStore implements ILocalStore {
       _totalItems: observable,
       _pageSize: observable,
       _queryParams: observable,
+      _categories: observable,
+      _categoriesLoading: observable,
+      _categoriesError: observable,
+
       recipes: computed,
       filteredRecipes: computed,
       isLoading: computed,
@@ -61,27 +74,38 @@ export class RecipesStore implements ILocalStore {
       searchQuery: computed,
       filters: computed,
       currentPage: computed,
+      categories: computed,
+      categoriesLoading: computed,
+      categoriesError: computed,
+
       fetchRecipes: action.bound,
       setFilter: action.bound,
       clearFilters: action.bound,
       setPage: action.bound,
       setSearchQuery: action.bound,
+      fetchCategories: action.bound,
     });
 
     this._searchReactionDisposer = reaction(
-      () => [this._queryParams.search, this._queryParams.page],
+      () => {
+        const value = [this._queryParams.search, this._queryParams.page];
+        return value;
+      },
       () => {
         this.fetchRecipes();
       }
     );
 
     this._filterReactionDisposer = reaction(
-      () => ({
-        category: this._queryParams.filters.category,
-        vegetarian: this._queryParams.filters.vegetarian,
-        minRating: this._queryParams.filters.minRating,
-        maxTime: this._queryParams.filters.maxTime,
-      }),
+      () => {
+        const filters = {
+          category: this._queryParams.filters.category,
+          vegetarian: this._queryParams.filters.vegetarian,
+          minRating: this._queryParams.filters.minRating,
+          maxTime: this._queryParams.filters.maxTime,
+        };
+        return filters;
+      },
       () => {
         if (this._queryParams.page !== 1) {
           this._queryParams.setPage(1);
@@ -91,6 +115,7 @@ export class RecipesStore implements ILocalStore {
       }
     );
 
+    this.fetchCategories();
     this.fetchRecipes();
   }
 
@@ -126,14 +151,59 @@ export class RecipesStore implements ILocalStore {
     return this._queryParams.page;
   }
 
-
   get filters(): RecipesFilter {
-  const { vegetarian, category } = this._queryParams.filters;
-  return {
-    vegetarian: vegetarian === 'true' ? true : vegetarian === 'false' ? false : null,
-    categoryId: category || null
-  };
-}
+    const { vegetarian, category } = this._queryParams.filters;
+    return {
+      vegetarian: vegetarian === 'true' ? true : vegetarian === 'false' ? false : null,
+      categoryId: category || null,
+    };
+  }
+
+  get categories(): Option[] {
+    return this._categories;
+  }
+
+  get categoriesLoading(): boolean {
+    return this._categoriesLoading;
+  }
+
+  get categoriesError(): string | null {
+    return this._categoriesError;
+  }
+
+  async fetchCategories(): Promise<void> {
+    this._categoriesLoading = true;
+    this._categoriesError = null;
+
+    try {
+      const data = await mealCategoriesApi.getCategories();
+
+      const options: Option[] = data.map((cat) => ({
+        key: String(cat.id),
+        value: cat.title,
+      }));
+
+      runInAction(() => {
+        this._categories = options;
+        this._categoriesLoading = false;
+      });
+    } catch (err) {
+      runInAction(() => {
+        this._categoriesError =
+          err instanceof Error ? err.message : 'Ошибка при загрузке категорий';
+        this._categoriesLoading = false;
+      });
+    }
+  }
+
+  getSelectedCategories(): Option[] {
+    const categoryId = this.filters.categoryId;
+    if (categoryId && this._categories.length > 0) {
+      const category = this._categories.find((opt) => opt.key === categoryId);
+      return category ? [category] : [];
+    }
+    return [];
+  }
 
   getRecipeImageUrl(recipe: Recipe): string {
     if (recipe.images && recipe.images.length > 0) {
@@ -154,7 +224,6 @@ export class RecipesStore implements ILocalStore {
       const searchTerm = this._queryParams.search;
       const page = this._queryParams.page;
       const filters = this._queryParams.filters;
-
 
       let response: RecipesResponse;
 
@@ -208,7 +277,6 @@ export class RecipesStore implements ILocalStore {
   }
 
   setFilter<K extends keyof RecipesFilter>(key: K, value: RecipesFilter[K]): void {
-
     let stringValue = '';
 
     if (key === 'vegetarian') {
@@ -225,6 +293,7 @@ export class RecipesStore implements ILocalStore {
         this._queryParams.setFilter('category', stringValue);
         break;
     }
+    this.fetchRecipes();
   }
 
   setPage(page: number): void {
